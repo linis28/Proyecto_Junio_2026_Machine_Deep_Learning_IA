@@ -1,0 +1,335 @@
+
+
+
+\documentclass[12pt,twoside]{report}
+
+%  \documentclass[12pt]{report}
+%  \documentclass[12pt]{book}
+
+%  \usepackage{draftwatermark}   % Marca de agua
+%  Marcas de agua: draftwatermarks
+%  \input{Preambulo}
+
+%  \begin{document}  % en prueba
+	
+	
+\input{PreambuloC1}
+	
+\usepackage{makeidx}  % Indice alfabático
+
+\makeindex 
+
+
+
+
+
+
+%  Aqui ve 2026    \begin{document}
+\include{PortadaC1} 	
+ %  \include{Portada2} 
+   
+ 
+  
+   
+\begin{document}
+                 % Cargamos la portada desde la Carpeta contenido  
+   \include{Introducion17_09_2020}     % Cargamos los capítulos desde la carpeta Contenido.
+   \include{Supervisado27_09_2020}     % Los capítulos capX.tex no llevan ni preámbulo ni 
+   \include{NoSupervisado02_10_2020}
+   \include{IngenieriaC04_10_2020}
+   \include{Evaluando10_09_2020} 
+   \include{Pipeline15_10_2020} 
+   \include{Texto18_10_2020}   
+   \include{Resumen08_25_2020}
+  % definición del  documento, solo órdenes que irían tras \begin{document}  
+  %  \include{Contenido/cap2} % cap2 no aparecerá en el resultado
+  % mantiene la numeración como si cap2.tex estuviera incluido
+
+
+\newpage
+
+%    Indice  Rolosay
+
+
+\index{A@\textbf{\huge{A}}|Rolosaysnopage} 
+\index{B@\textbf{\huge{B}}|Rolosaysnopage}
+\index{C@\textbf{\huge{C}}|Rolosaysnopage}
+\index{D@\textbf{\huge{D}}|Rolosaysnopage}
+\index{E@\textbf{\huge{E}}|Rolosaysnopage}
+\index{F@\textbf{\huge{F}}|Rolosaysnopage} 
+\index{G@\textbf{\huge{G}}|Rolosaysnopage}
+\index{H@\textbf{\huge{H}}|Rolosaysnopage}
+\index{I@\textbf{\huge{I}}|Rolosaysnopage}
+\index{J@\textbf{\huge{J}}|Rolosaysnopage}
+\index{K@\textbf{\huge{K}}|Rolosaysnopage} 
+\index{L@\textbf{\huge{L}}|Rolosaysnopage}
+\index{M@\textbf{\huge{M}}|Rolosaysnopage}
+\index{N@\textbf{\huge{N}}|Rolosaysnopage}
+\index{O@\textbf{\huge{O}}|Rolosaysnopage} 
+\index{P@\textbf{\huge{P}}|Rolosaysnopage}
+\index{Q@\textbf{\huge{Q}}|Rolosaysnopage}
+\index{R@\textbf{\huge{R}}|Rolosaysnopage}
+\index{S@\textbf{\huge{S}}|Rolosaysnopage}
+\index{T@\textbf{\huge{T}}|Rolosaysnopage} 
+\index{U@\textbf{\huge{U}}|Rolosaysnopage}
+\index{V@\textbf{\huge{V}}|Rolosaysnopage}
+\index{W@\textbf{\huge{W}}|Rolosaysnopage}
+\index{X@\textbf{\huge{X}}|Rolosaysnopage}
+\index{Y@\textbf{\huge{Y}}|Rolosaysnopage} 
+\index{Z@\textbf{\huge{Z}}|Rolosaysnopage}
+
+
+
+
+
+\addcontentsline{toc}{chapter}{Índice alfabético}	
+\printindex % para que ponga el índice aquí
+
+
+\end{document}
+
+
+
+
+
+
+
+
+\pageref{Pagina1}.
+{\scriptsize/}
+
+
+    "\;", "\:"      espacio            %     “ ” 
+    \~ 
+\appendix
+\include{ap1}
+
+  \index{planta|see{flores}}.
+
+  \index{florecitas}\index{florecitas|seealso{flores}}.
+  
+  \index{florecitas|seealso{flores}}.
+
+   \index{Jupyter Notebook}
+
+
+\href{https://github.com/amueller/introduction_to_ml_with_python}{\color{vino} GitHub}.
+
+{\footnote{\scriptsize	{   }}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%     Indice    %%%%%%%%%%%%%%%%%%%%%
+
+Algunos de mis animales favoritos son el erizo\index{erizo} y el armadillo\index{armadillo}
+
+Alegra tu cuarto con alguna planta\index{planta|see{flores}}.
+Alegra tu cuarto con unas cuantas florecitas\index{florecitas} \index{florecitas|seealso{flores}}.
+
+
+Ejemplo: lana\index{lana}, lápiz\index{lápiz}, lata\index{lata}.
+
+Ejemplo: lana\index{lana}, lápiz\index{lapiz @ lápiz}, lata\index{lata}.
+\index{etiqueta}
+Ahora, cuando queremos añadir una palabra al índice, basta con poner justo detrás de la palabra \index{nombre}:
+Erizo\index{erizo}
+
+Etiqueta\index{etiqueta1}	
+
+
+\index{A@\textbf{\huge{A}}|Rolosaysnopage}
+\index{B@\textbf{\huge{B}}|Rolosaysnopage}
+\index{C@\textbf{\huge{C}}|Rolosaysnopage}
+
+
+%    \newpage
+%	\addtocontents{toc}{\hfill \textbf{Página} \par}  %  linea para la página
+%   \addtocontents{toc}{\vspace{-2mm} \hspace{-7.5mm} \hrule \par}
+
+
+
+  I want to build\index{build} an index. build\index{abuild} an index.
+
+
+\newpage
+\addcontentsline{toc}{chapter}{Índice alfabético}	
+\printindex % para que ponga el índice aquí
+
+
+
+Me genero un comando para no mostrar el número de página:
+\newcommand{\Rolosaysnopage}[1]{{ }}
+
+Y luego referencio las letras (por ejemplo la 'A') con un \index según:
+\index{A@\textbf{\huge{A}}|Rolosaysnopage}
+\index{B@\textbf{\huge{B}}|Rolosaysnopage}
+
+\end{document}
+
+
+
+
+
+
+
+\tiny       	5 5	6 6	6 6
+\scriptsize	    7 7	8	8
+\footnotesize	8 9 9	10
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\vskip 1.5cm
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%  Pruebas Pruebas  %%%%%%%%%%%%%%%%%%%%%%%% 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%     Indice    %%%%%%%%%%%%%%%%%%%%%
+
+Algunos de mis animales favoritos son el erizo\index{erizo} y el armadillo\index{armadillo}
+
+Alegra tu cuarto con alguna planta\index{planta|see{flores}}.
+Alegra tu cuarto con unas cuantas florecitas\index{florecitas}\index{florecitas|seealso{flores}}.
+
+
+Ejemplo: lana\index{lana}, lápiz\index{lápiz}, lata\index{lata}.
+
+Ejemplo: lana\index{lana}, lápiz\index{lapiz @ lápiz}, lata\index{lata}.
+\index{etiqueta}
+Ahora, cuando queremos añadir una palabra al índice, basta con poner justo detrás de la palabra \index{nombre}:
+Erizo\index{erizo}
+
+Etiqueta\index{etiqueta1}	
+
+
+%    \newpage
+%	\addtocontents{toc}{\hfill \textbf{Página} \par}  %  linea para la página
+%   \addtocontents{toc}{\vspace{-2mm} \hspace{-7.5mm} \hrule \par}
+
+
+
+I want to build\index{build} an index. build\index{abuild} an index.
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%% Inicio de marca agua  y fondo  %%%%%%%%%%%%%%%%%%%%%%%%
+
+\SetWatermarkText{\bf\textsc{Guerrero} }% por defecto Draft 
+
+\SetWatermarkScale{5} % para que cubra toda la página
+%\SetWatermarkColor[rgb]{1,0,0} % por defecto gris claro
+
+\SetWatermarkFontSize{3cm}   %   tamano de fuente
+
+\SetWatermarkAngle{-55} % respecto a la horizontal
+% \SetWatermarkText{\bf\textsc{Linis}} % por defecto Draft 
+\usepackage{blindtext}
+
+
+%  incluir fongo de página
+
+
+%La opción pages puede ser all (para todo el documento) o some, para algunas partes del documento
+\usepackage[pages=5]{background}
+% configuración
+\backgroundsetup{
+	scale=0.45, %escala de la imagen, es recomendable que sea del mismo tamaño que el pdf
+	color=black, %fondo a usar para transparencia
+	opacity=0.2, %nivel de transparencia
+	angle=0, %en caso de querer una rotación
+	contents={%
+		\includegraphics[width=\paperwidth,height=\paperheight]{Upto} %nombre de la imagen a utilizar como fondo
+	}%
+} 
+
+
+%   \BgThispage  pagina con fondo
+
+%%%%%%%%%%%%%%%%%%%% Fin de Marca y fondo  %%%%%%%%%%%%%%%%%%%
+
+
+
+Para el texto:            \SetWatermarkText{NuevoTexto}
+Para un tono de gris:     \SetWatermarkColor[gray]{0.5}, con el rango [0,1].
+Para un color diferente:  \SetWatermarkColor[rgb]{1,0,0}, con el rango [0,1] para cada color primario.
+Para el tamaño de la fuente:    \SetWatermarkFontSize{3cm}
+Para el factor de escala:       \SetWatermarkScale{5}
+Para el ángulo de inclinación:  \SetWatermarkAngle{30}, en grados.
+
+\SetWatermarkColor[rgb]{1,0,0} % por defecto gris claro,  rojo
+
+\SetWatermarkColor{COLOR}     o  \SetWatermarkColor[MODELO]{DEFINICIÓN} define el color de la marca, por defecto es gris clara.
+
+
+
+
+
+
+
+
+
+%%%  %%%%  %%%%  %%%%  %%%%%%   %%%%%%   %%%%%   %%%%   %%%%%   %%%%%   %%%%%%
+
+
+
+
+
+
+
+
+¿Qué es Tf-Idf (término frecuencia-frecuencia inversa de documentos)?
+El método de puntuación que se utiliza arriba toma el recuento de cada palabra y representa la palabra en el vector por el número de recuentos de esa palabra en particular. ¿Qué significa una palabra que tiene un alto número de palabras?
+
+¿Significa esto que la palabra es importante para recuperar información sobre documentos? La respuesta es no. Permítanme explicarles, si una palabra aparece muchas veces en un documento, pero también junto con muchos otros documentos en nuestro conjunto de datos, tal vez sea porque esta palabra es solo una palabra frecuente; no porque sea relevante o significativo.
+
+Un enfoque consiste en cambiar la escala de la frecuencia de las palabras según la frecuencia con la que aparecen en todos los documentos, de modo que se penalicen las puntuaciones de palabras frecuentes como "the" que también son frecuentes en todos los documentos. Este enfoque se denomina frecuencia de documento de frecuencia inversa de términos o, en breve, enfoque de puntuación de Tf-Idf. El objetivo de TF-IDF es reflejar la relevancia de un término en un documento determinado. Entonces, ¿cómo se calcula Tf-Idf de un documento en un conjunto de datos?
+
+TF-IDF para una palabra en un documento se calcula multiplicando dos métricas diferentes:
+
+El término frecuencia (TF) de una palabra en un documento. Hay varias formas de calcular esta frecuencia, siendo la más simple un recuento sin procesar de los casos en que aparece una palabra en un documento. Luego, hay otras formas de ajustar la frecuencia. Por ejemplo, dividiendo el recuento sin procesar de instancias de una palabra por la longitud del documento o por la frecuencia sin procesar de la palabra más frecuente en el documento. La fórmula para calcular la frecuencia de término es
+
+TF (yo, j) = norte (yo, j) / Σ norte (yo, j)
+Dónde,
+
+n (i, j) = número de veces que aparece la enésima palabra en un documento
+Σn (i, j) = número total de palabras en un documento. 
+La frecuencia inversa de documento (FDI) de la palabra a través de un conjunto de documentos. Esto sugiere cuán común o rara es una palabra en todo el conjunto de documentos. Cuanto más cerca esté de 0, más común es la palabra. Esta métrica se puede calcular tomando el número total de documentos, dividiéndolo por el número de documentos que contienen una palabra y calculando el logaritmo.
+
+
+Entonces, si la palabra es muy común y aparece en muchos documentos, este número se acercará a 0. De lo contrario, se acercará a 1.
+
+
+
+
+
+
+
+
+Cap 4
+In[61]:
+
+poly_transformer = PolynomialFeatures(degree=2, interaction_only=True,
+include_bias=False)
+X_hour_week_onehot_poly = poly_transformer.fit_transform(
+X_hour_week_onehot)

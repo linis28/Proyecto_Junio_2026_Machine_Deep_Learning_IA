@@ -1,0 +1,175 @@
+
+
+
+
+
+\usepackage[spanish,es-tabla]{babel}
+
+% \usepackage[spanish]{babel}
+
+\usepackage [T1]{fontenc}
+\setcounter{tocdepth}{2}
+\newtheorem{defi}{{\bf Definición}}[chapter]
+
+\usepackage{amsmath}
+\usepackage{enumerate} 
+\usepackage{xcolor}
+%  	\usepackage[color]{showkeys}    %  visualiza etiquetas
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \renewcommand{\chapter}{\LARGE{\bf {Capítulo}}}
+
+\usepackage{hyperref}
+\hypersetup{colorlinks , citecolor=Violet, 	linkcolor=black, 	urlcolor=black}
+
+%  \usepackage[dvipdfm]{hyperref}
+%  \tableofcontents
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  \usepackage{python}
+%  marca de agua
+
+%%%%%%%%%%%%%%%%%%%%%%%%%  Marca de Agua  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  \usepackage{background} 
+%  \backgroundsetup{contents=Borrador, opacity=0.45, scale=10, color=blue, angle=45}
+
+%\includegraphics{logo1} para figuras o graficos
+
+%  https://www.youtube.com/watch?v=a3kbr4UtLXk
+%%%%%%%%%%%%%%%%%%%%%%%%%  Marca de Agua  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\usepackage{listings}
+
+\usepackage{picinpar}  % Para abrir ventanas en parrafos
+
+% Graficas en latex
+
+\usepackage{graphicx} 
+
+%\graphicspath{{Imagen_Machine/}}  % Exceso de graficos  reduce codigo.
+
+\graphicspath{{Imagenes/}} 
+
+%	\usepackage{lscape}   %   pagina horizontal, pero no funciono, giro la figura
+\usepackage{pdflscape}  %   pagina horizontal, si funciona
+
+
+\DeclareGraphicsRule{.emf}{bmp}{}{}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}     %solo para PDFLaTeX
+
+
+
+
+\usepackage{hyperref}         %%%% hiper enlaces 
+
+\usepackage{fancybox}
+
+%\addto\captionsspanish{
+%	\renewcommand{\partname}{Libro}
+%	\renewcommand{\chaptername}{Jornada}     }
+
+\renewcommand{\partname}{Libro}
+
+\renewcommand{\chaptername}{Capítulo}
+
+
+
+
+%  \renewcommand{\thefootnote}{\arabic{footnote}}  Nota pie de pagina
+%  \renewcommand{\chaptername}{Capítulo}
+
+
+
+\usepackage{subcaption}
+\usepackage{caption}
+
+
+\usepackage{python}
+
+
+
+\usepackage{colortbl}
+\definecolor{vino}{rgb}{0.5, 0.0, 0.13}
+
+\usepackage{listings}
+
+\lstset{language=Python,
+	basicstyle=\ttfamily\scriptsize\scriptsize,   %  \textrm{
+	%otherkeywords={self},             % Add keywords here
+	%	keywordstyle=\color{blue},
+	captionpos=b,                    % Establece la posición de la leyenda del cuadro de código
+	commentstyle=\color{gray},	
+	emph={print,type,zip},          % Custom highlighting
+	emphstyle=\color{red!85!black},    % Custom highlighting style
+	keepspaces=true, 
+	showspaces=false, 
+	%  otherkeywords={0,1,2,3,4,5,6,7,8,9},              
+	rulecolor=\color{gray},	
+	%stringstyle=\color{red},
+	stringstyle=\color{green!75!black},
+	%title=\lstname\color{green},
+	keywordstyle=\bf\color{blue!75!black},    %  \color{green!40!black},	
+	%	frame=tb,                         % Any extra options here
+	identifierstyle=\color{black},	
+	showstringspaces=false      }
+
+
+
+
+
+
+
+%     "\thechapter" y "\thesection"
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+
+
+
+
+
+
+\renewcommand{\headrulewidth}{0pt}
+%\renewcommand{\headrule}{\hbox to\headwidth{\color{red}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\footrule}{\hbox to\headwidth{\color{red}\leaders\hrule height \footrulewidth\hfill}}
+\renewcommand{\footrulewidth}{0.5pt}
+
+
+
+
+
+
+%  \usepackage{makeidx}  % Indice alfabático
+\usepackage{imakeidx}
+\makeindex 
+
+
+\usepackage{setspace}
+
+
+
+
+\usepackage{longtable} 
+
+%\usepackage{varioref}
+\usepackage[spanish]{varioref}
+
+
+\usepackage{hyperref}
+
+
+
+
+
+
+
+
+
+
+\index{A@\textbf{\huge{A}}|Rolosaysnopage}
+\index{B@\textbf{\huge{B}}|Rolosaysnopage}
+\index{C@\textbf{\huge{C}}|Rolosaysnopage}
+
+\index{C@\textbf{\huge{X}}|Rolosaysnopage}
+
+	

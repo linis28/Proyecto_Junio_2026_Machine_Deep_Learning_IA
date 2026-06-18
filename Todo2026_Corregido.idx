@@ -1,0 +1,67 @@
+\indexentry{A@\textbf{\huge{A}}|Rolosaysnopage}{1}
+\indexentry{B@\textbf{\huge{B}}|Rolosaysnopage}{1}
+\indexentry{C@\textbf{\huge{C}}|Rolosaysnopage}{1}
+\indexentry{C@\textbf{\huge{X}}|Rolosaysnopage}{1}
+}{10}
+\indexentry{SciPy}{10}
+\indexentry{matplotlib}{11}
+\indexentry{pandas}{12}
+\indexentry{mglearn}{14}
+\indexentry{mglearn}{14}
+\indexentry{Python 2 Vs Python 3}{14}
+\indexentry{dataset}{17}
+\indexentry{conjunto de entrenamiento}{20}
+\indexentry{conjunto de prueba}{20}
+\indexentry{gráfico de dispersión}{22}
+\indexentry{k-Nearest Neighbors}{23}
+\indexentry{instanciar la clase}{24}
+\indexentry{cadena de caracteres}{25}
+\indexentry{exactitud}{26}
+\indexentry{método de puntuación}{27}
+\indexentry{score}{27}
+\indexentry{dataset}{28}
+\indexentry{capacidad de generalizar}{32}
+\indexentry{sobreajuste}{34}
+\indexentry{subajuste}{34}
+\indexentry{conjuntos de baja dimensión}{37}
+\indexentry{conjuntos de alta dimensión}{38}
+\indexentry{k-NN}{41}
+\indexentry{k-vecinos más cercanos}{41}
+\indexentry{regresión k-vecinos más cercano}{47}
+\indexentry{conjuntos dispersos}{51}
+\indexentry{sparse}{51}
+\indexentry{modelos lineales}{51}
+\indexentry{regresión lineal}{53}
+\indexentry{regressión  Ridge}{55}
+\indexentry{regularización}{56}
+\indexentry{regularización  $L2$}{56}
+\indexentry{regresión Lasso}{60}
+\indexentry{regularización $L1$}{60}
+\indexentry{clasificación  binaria}{63}
+\indexentry{Modelos lineales para clasificación}{63}
+\indexentry{regresión logística}{64}
+\indexentry{máquinas de soporte de vectores lineal}{64}
+\indexentry{naive bayes classifiers}{76}
+\indexentry{árboles de decisión}{79}
+\indexentry{construcción de un árbol}{79}
+\indexentry{bosques aleatorios}{93}
+\indexentry{potenciación del gradiente}{100}
+\indexentry{gradient boosted}{100}
+\indexentry{xgboost}{103}
+\indexentry{soporte de vectores Kernelized}{115}
+\indexentry{redes neuronale}{116}
+\indexentry{función de decisión}{132}
+\indexentry{probabilidades de predicción}{134}
+\indexentry{modelo calibrado }{135}
+\indexentry{cuando usar el modelo}{140}
+\indexentry{eigenface}{161}
+\indexentry{vectores propios|seealso{eigenface}}{171}
+\indexentry{caras  propias}{172}
+\indexentry{verdad fundamental}{206}
+\indexentry{verdad fundamental}{208}
+\indexentry{Ingeniería de Característica}{228}
+\indexentry{one-out-of-N}{229}
+\indexentry{codifecaión one-hot}{230}
+\indexentry{binning}{238}
+\indexentry{discretización}{238}
+\indexentry{curva de precisión-sensibilidad}{319}

@@ -1,0 +1,361 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\chapter{Consejos y conclusiones}
+
+
+Ahora sabes cómo aplicar los algoritmos de aprendizaje automático importantes para el 
+aprendizaje supervisado y no supervisado,  que le permiten resolver una amplia variedad 
+de problemas de aprendizaje automático. Antes de dejarte para explore  todas las posibilidades 
+que ofrece el aprendizaje automático, queremos darte unas últimas palabras de consejo, 
+apuntarte hacia algunos recursos adicionales y darte sugerencias sobre cómo puedes
+mejorar aún más tus habilidades de aprendizaje automático y ciencia de datos.\\
+
+
+
+\section{Abordando un problema de aprendizaje automático}
+	
+
+Con todos los  métodos que introducimos  en este libro y que ahora tiene al alcance de su mano,
+ puede ser tentador saltar y comenzar a resolver  problemas relacionados con los datos 
+simplemente ejecutando configurando su algoritmo favorito. Sin embargo, esta no suele ser una buena forma de comenzar su análisis. El algoritmo de aprendizaje automático suele ser sólo una pequeña parte de 
+ una larga lista de etapas del proceso de análisis de datos y toma de decisiones.
+  Para hacer un uso efectivo del aprendizaje automático, necesitamos  dar un paso atrás y considerar el problema en general. Primero, debes  pensar sobre el tipo de pregunta que desea responder. 
+
+¿Quiere hacer un análisis exploratorio y ver si encuentra algo interesante en los datos?
+¿O ya tienes un objetivo en particular en mente?  
+En general,   se comienza  con un objetivo claro, como detectar transacciones fraudulentos
+ de usuarios, recomendaciones de películas o búsqueda de planetas desconocidos. 
+ Si tiene tal objetivo, antes de construir un sistema para lograrlo, primero debe pensar
+sobre cómo definir y medir el éxito, y cuál es el impacto de una solución exitosa
+de su objetivo general de investigación o negocio.
+
+  Supongamos  que su objetivo es detectar fraudes, entonces surgen las siguientes preguntas:
+
+\begin{list}{$\bullet$}{}  
+	
+	\item  ¿Cómo medir si la predicción de fraude realmente está funcionando?
+	
+	\item ¿Tengo la data correcta para evaluar con un algoritmo?
+	
+	\item  Si tengo éxito, ¿cuál será el impacto comercial de mi solución?
+	
+\end{list}
+
+Como se discutió  en el Capítulo \ref{Cap5}, es mejor si puede medir el desempeño del
+algoritmo utilizando directamente una métrica empresarial, como aumento de ganancias o disminución de pérdidas. Sin embargo, esto no es tan sencillo de hacer. 
+
+Una pregunta que puede ser más fácil de responder es  "{}¿Qué pasa si construyó el modelo perfecto? "{} 
+Si detectar perfectamente cualquier fraude le ahorrará a la empresa \$ 100 al mes, estos posibles ahorros probablemente no serán suficientes para garantizar el esfuerzo de empezar a desarrollar un algoritmo.  Por otro lado, si el modelo pudiera ahorrarle a su empresa decenas de miles de dólares cada mes, el problema podría ser vale la pena explorar.\\
+	
+
+Supongamos que se ha definido el problema a resolver, conocemos una solución  que 
+puede tener un  impacto  significado   para el  proyecto, y se ha asegurado de tener
+la información correcta para evaluar el éxito. Los siguientes pasos generalmente son 
+adquirir los datos y crear un prototipo.\\
+ 
+En este libro hemos tratado  muchos modelos que se pueden emplear,  cómo para evaluar y ajustar correctamente estos modelos.   Sin embargo, mientras se prueban los modelos, se debe tener muy presente  que esto es sólo una pequeña parte de un gran flujo de trabajo de ciencia de datos, y la construcción de los  modelos a menudo es parte de un círculo de retroalimentación de {\emph{ recolección  de nuevos datos, limpieza de datos, construcción modelos y análisis de  modelos.}}   
+Analizar los errores que comete un modelo con frecuencia puede ser informativo sobre lo que 
+falta en los datos, qué datos adicionales podrían ser seleccionado, 
+o cómo se podría reformular la tarea para hacer que el aprendizaje automático sea más efectivo.
+Recopilar más o diferentes datos o cambiar ligeramente la formulación de la tarea podría
+proporcionan una recompensa   mayor  que realizar búsquedas interminables en la red para ajustar los parámetros.	
+
+\subsection{Los seres humanos en el bucle}
+
+También debe considerar si debe tener humanos en el circuito y cómo.   Algunos procesos (como la detección de peatones en un coche auto-conducido) necesitan tomar decisiones inmediatas.
+Otros podrían no necesitar respuestas inmediatas, por lo que puede ser posible que los seres humanos confirmen decisiones inciertas.  Las aplicaciones médicas, por ejemplo, pueden necesitar niveles muy altos de precisión  que posiblemente no se puedan lograr con solo un algoritmo de aprendizaje automático. 
+
+Pero si un algoritmo puede generar 90 por ciento, 50 por ciento o tal vez incluso
+sólo el 10 por ciento de las decisiones de forma automática, eso ya podría aumentar el tiempo de respuesta
+o reducir el costo.  Muchas aplicaciones están dominadas por "{}casos simples"{}, para los cuales un algoritmo puede tomar una decisión, con relativamente pocos "{}casos complicados"{}, que pueden ser
+redirigido a un humano.
+	
+\subsection{Del prototipo a la producción}
+
+Las herramientas que analizamos en este libro son excelentes para muchas aplicaciones de aprendizaje automático,  permiten análisis y creación de prototipos muy rápidos.
+Python y {\ttfamily scikit-learn} se utiliza también   en sistemas de producción en muchas organizaciones, incluso en grandes organizaciones como  bancos internacionales y empresas globales de redes sociales. Sin embargo, muchas empresas tienen una infraestructura compleja, y no siempre es fácil incluir Python en estos sistemas.  
+Esto no es necesariamente un problema. En muchas empresas, los equipos de análisis de datos
+trabajar con lenguajes como Python y R que permiten la prueba rápida de ideas, mientras
+los equipos de producción trabajan con lenguajes como Go, Scala, C\!{\scriptsize ++}  y Java para crear
+sistemas robustos y  escalables.  El análisis de datos tiene  diferentes requisitos  en la creación de servicios en vivo,
+por lo que tiene sentido usar diferentes lenguajes para estas tareas. Una solucón 
+relativamente común  es volver a implementar la solución que encontró el equipo 
+de análisis interno al marco más grande, utilizando un lenguaje de alto rendimiento. 
+Esto puede ser más fácil que incrustar una librería  completa o lenguaje de programación
+ y convertir desde y hacia los diferentes formatos de datos.\\
+
+
+
+Independientemente de si puede usar {\ttfamily scikit-learn}  en un sistema de producción o no, es importante tener en cuenta que los sistemas de producción tienen requisitos diferentes de los scripts de análisis únicos.
+
+Si un algoritmo se implementa en un sistema más grande, los aspectos de ingeniería de software como confiabilidad,  predictibilidad, tiempo de ejecución y requisitos de memoria ganan relevancia.
+
+La simplicidad es clave para proporcionar sistemas de aprendizaje automático que funcionan bien en estas áreas. Inspeccione críticamente cada parte del proceso de datos y la  predicción de  pipeline y pregúntese cuánta complejidad crea cada paso, qué tan robusta es cada componente a los cambios en los datos o la infraestructura de cómputo, y si el beneficio de cada componente justifica la complejidad.
+
+
+
+Si  está involucrando sistemas de   aprendizaje automático, recomendamos encarecidamente leer el artículo \href{https://research.google/pubs/pub43146/}{\textcolor{vino}{"{}Machine Learning: The High Interest Credit Card of Technical Debt"{}}}, publicado por el equipo de investigadores en Google de aprendizaje automático. 
+El documento destaca la compensación en la creación y el mantenimiento de software de aprendizaje automático en producción a gran escala. Si bien el tema de la deuda técnica es particularmente apremiante en proyectos a gran escala y a largo plazo, las lecciones aprendidas pueden ayudarnos a crear un mejor software incluso para sistemas más pequeños y de corta duración.\\
+
+\subsection{Probando sistemas de producción}
+
+
+
+
+ En este libro, cubrimos cómo evaluar predicciones algorítmicas basadas en un conjunto de pruebas que recopilamos de antemano. Esto se conoce como  \emph{evaluación fuera de línea}. Si su sistema de aprendizaje automático es orientado al usuario, este es sólo el primer paso en la evaluación de un algoritmo, sin embargo; el siguiente paso es generalmente pruebas en línea o pruebas en vivo, donde se evalúan las consecuencias de emplear el algoritmo en el sistema en general. 
+Cambiar las recomendaciones o resultados de búsqueda de los usuarios que se muestran por un sitio web puede cambiar drásticamente su comportamiento y conducir a consecuencias inesperadas.  Para protegerse  contra estas sorpresas, la mayoría de los servicios orientados al usuario emplean pruebas A/B, una forma de estudio de usuarios ciegos.
+
+
+En las pruebas A/B, sin su conocimiento, una parte seleccionada de los usuarios recibirá
+un sitio web o servicio que utiliza el algoritmo A, mientras que al resto de usuarios se les proporcionará
+con el algoritmo B. Para ambos grupos, las métricas de éxito relevantes se registrarán en un conjunto de 
+período de tiempo. Luego, se compararán las métricas del algoritmo A y el algoritmo B,
+y se realizará una selección entre los dos enfoques de acuerdo con estas métricas.
+
+El uso de pruebas A/B nos permite evaluar los algoritmos "{}en estado salvaje"{}, lo que podría ayudarnos a descubrir consecuencias inesperadas cuando los usuarios interactúan con nuestro modelo.
+Con frecuencia, el modelo nuevo es A, mientras que B es el sistema establecido.  Hay mecanismos más elaborados para las pruebas en línea que van más allá de las pruebas A/B, como los algoritmos de bandidos. Una gran introducción a este tema se puede encontrar en el libro  \href{http://shop.oreilly.com/product/0636920027393.do}{\textcolor{vino}{ Bandit Algorithms for Website Optimization}} de John Myles White (O'Reilly).
+
+
+
+\subsection{Construyendo su propio estimador} 
+
+Este libro ha cubierto una variedad de herramientas y algoritmos implementados en {\ttfamily scikit-learn} que ser usado en una amplia gama de tareas. Sin embargo, con gran frecuencia siempre  habrá algún procesamiento particular que necesiten  sus datos y que no está implementado en{\ttfamily scikit-learn}. 
+Puede ser suficiente para preprocesar sus datos antes de pasarlos a su modelo {\ttfamily scikit-learn} o pipeline. Sin embargo, si su preprocesamiento depende de los datos, y desea aplicar una búsqueda de cuadrícula o validación cruzada, las cosas se vuelven más complicadas.\\
+
+En el  Capítulo \ref{Cap6}  discutimos la importancia de poner todo el procesamiento dependiente de datos
+dentro del ciclo de validación cruzada. Entonces, ¿cómo puede usar su propio procesamiento junto con las herramientas de {\ttfamily scikit-learn}?     Implementar un estimador que sea compatible con la interfaz de {\ttfamily scikit learn}, para que pueda usarse con  {\ttfamily Pipeline, GridSearchCV}  y {\ttfamily cross\_val\_score}, es muy fácil. 
+Puede encontrar instrucciones detalladas en la \href{https://scikit-learn.org/stable/developers/contributing.html#rolling-your-own-estimator}{\textcolor{vino}{documentación de  {\ttfamily scikit-learn}}}, pero aquí está la esencia.
+La forma más sencilla de implementar una clase transformer   es heredando de {\ttfamily BaseEstimator} y {\ttfamily TransformerMixin}, y luego implementando las funciones {\ttfamily \_\_init\_\_, fit y predict} como la siguiente:
+
+
+
+
+
+\begin{lstlisting}%[frame=single]
+
+In[1]:
+
+   from sklearn.base import BaseEstimator, TransformerMixin
+   
+   class MyTransformer(BaseEstimator, TransformerMixin):
+       def __init__(self, first_parameter=1, second_parameter=2):
+           # All parameters must be specified in the __init__ function
+           self.first_parameter = 1
+           self.second_parameter = 2
+         
+       def fit(self, X, y=None):
+           # fit should only take X and y as parameters
+           # Even if your model is unsupervised, you need to accept a y argument!
+          
+           # Model fitting code goes here
+           print("fitting the model right here")
+           # fit returns self
+           return self
+          
+      def transform(self, X):
+          # transform takes as parameter only X
+          # Apply some transformation to X
+          X_transformed = X + 1
+          return X_transformed
+         
+\end{lstlisting}
+
+
+Implementar un clasificador o regresor funciona de manera similar, solo que en lugar de 
+{\ttfamily TransformerMixin} necesitas heredar de {\ttfamily ClassifierMixin}  o {\ttfamily  RegressorMixin}. Además, en lugar de implementar {\ttfamily transform} , se implementaría { \ttfamily predict}.
+
+ Como se puede ver en el ejemplo dado aquí, la implementación de su propio estimador requiere muy poco código, y la mayoría de los usuarios de  {\ttfamily scikit-learn}  crean una colección de modelos personalizados a lo largo del tiempo.
+ 
+ 
+ 
+\subsection{Dónde ir desde aquí}
+%   Where to Go from Here
+ 
+ Este libro proporciona una introducción al aprendizaje automático y le hará un profesional eficiente.
+  Sin embargo, si desea mejorar sus habilidades de aprendizaje automático, aquí hay  sugerimos algunos  libros y recursos más especializados para investigar más a fondo
+
+
+\subsection{Teoría} 
+
+En este libro, tratamos de proporcionar una intuición de cómo funcionan los algoritmos de aprendizaje automático más comunes, sin requerir una base sólida en matemáticas o ciencias de la computación. Sin embargo, muchos de los modelos que discutimos utilizan principios de la teoría de probabilidad, álgebra lineal y optimización. Si bien no es necesario entender todos los detalles de cómo se implementan estos algoritmos, creemos que conocer algo de la teoría detrás de los algoritmos te hará un mejor científico de datos.
+
+
+Se han escrito muchos libros buenos sobre la teoría del aprendizaje automático,
+y si pudiéramos entusiasmarlo con las posibilidades que abre el aprendizaje automático,
+ le sugerimos que elija al menos uno de ellos y profundice. 
+ Ya  hemos mencionado el libro de Hastie, Tibshirani y Friedman The Elements of Statistical Learning el el 
+prefacio, pero vale la pena repetir aquí esta recomendación. 
+Otro libro muy  accesible, con el código de Python que lo acompaña, es Machine Learning: An Algorithmic Perspective de Stephen Marsland (Chapman y Hall{\scriptsize/}CRC). 
+Otros dos clásicos muy recomendados son Pattern Recognition y Machine Learning de Christopher Bishop (Springer), un libro que hace hincapié en un marco probabilístico, y Machine Learning; y el libro de   A Probabilistic Perspective de Kevin Murphy (MIT Press), una completa  disertación (leer:1,000{\scriptsize+} páginas) sobre métodos de aprendizaje automático con debates en profundidad sobre los enfoques más avanzados, mucho más allá de lo que podríamos cubrir en este libro.
+
+
+\subsection{Otros marcos y paquetes de aprendizaje automático}
+
+
+Si bien   {\ttfamily scikit-learn}  es nuestro paquete favorito para el aprendizaje automático{\footnote{Andreas podría no ser totalmente objetivo en este asunto.}} y Python es nuestro
+lenguaje favorito para el aprendizaje automático, existen muchas otras opciones.
+Dependiendo de sus necesidades, Python y {\ttfamily scikit-learn}  pueden no ser la mejor opción para
+tu situación particular. 
+Generalmente, usar Python es ideal para probar y evaluar modelos, pero los servicios web y aplicaciones más grandes se escriben  comúnmente en Java  o  C{\scriptsize++}, y  la integración en estos sistemas puede ser necesaria para que su modelo sea desplegado.
+Otra razón por la que puede querer ir más allá de {\ttfamily scikit-learn},   es si  su interés es el modelado estadístico y la inferencia,  más  que en la predicción. 
+En este caso, debería considerar el paquete {\ttfamily statsmodel } de Python, que implementa varios modelos lineales con una interfaz pensada con  más enfasiss en estadística.  
+Si no esta casado con Python, también puede considerar el uso de R, otra lengua franca de los científicos de datos. R es un lenguaje diseñado específicamente para el análisis estadístico y es famoso por sus excelentes capacidades de visualización y la disponibilidad de un gran número  de paquetes para modelado estadístico (generalmente altamente especializados).\\
+
+
+Otro paquete de aprendizaje automático muy popular es {\ttfamily vowpal wabbit} 
+(llamado  {\ttfamily vw } para evitar la posible distorsión de la lengua), un paquete
+de aprendizaje automático altamente optimizado escrito en  C{\scriptsize++}   con una interfaz de 
+línea de comandos.   {\ttfamily vw} es particularmente útil para grandes conjuntos de datos y
+para la transmisión de datos. Para ejecutar algoritmos de aprendizaje automático distribuidos sobre un clúster, una de las soluciones más populares en el momento de escribir este artículo es {\ttfamily mllib}, una librería Scala construida sobre el entorno de computación distribuida de Spark.
+
+
+
+\subsection{Ranking, sistemas de recomendación y otros tipos de aprendizaje}
+ 
+
+Debido a que este es un libro introductorio, nos hemos centramos en las tareas más comunes de aprendizaje automático: clasificación y regresión en el aprendizaje supervisado,  clúster y
+descomposición de señales en el aprendizaje no supervisado. Hay muchos más tipos de aprendizaje automático, con muchas aplicaciones importantes.  Dos tópicos  particularmente importantes que no cubrimos en este libro; son  el Ranking  y los sistemas de recomendación. El ranking  en que queremos recuperar las respuestas de una  consulta en particular, ordenadas por su relevancia.  probablemente ya haya utilizado un sistema  ranking hoy; así es como  operan los motores de búsqueda. Ingresa una consulta de búsqueda y obtiene una lista ordenada de respuestas, clasificadas por su relevancia (ranked).   Una  introducción a la   clasificación ranking se encuentra en el   libro de Schütze {\ttfamily{Introduction to Information Retrieval}} por   Manning, Raghavan, y  Schütze’s.     El segundo tópico son los sistemas de recomendación, que brindan sugerencias a los  usuarios en función de sus preferencias. Probablemente haya encontrado sistemas de recomendación bajo títulos como "{}Personas que puede conocer"{},  "{}Los clientes que compraron este artículo también compraron"{}  o  "{}Mejores selecciones para Usted."{} 
+Hay un montón de literatura sobre el tema, y si tiene interés, puede visitar la web de  
+\href{http://www.netflixprize.com/}{\textcolor{vino}{ "{}Netflix prize challeng"{} } }
+  ("{}Desafío de premios de Netflix"{}),  en el que el sitio de transmisión de vídeo de Netflix lanzó un gran conjunto de datos de preferencias de películas y ofreció un premio de 1 millón de dólares al equipo que podría proporcionar las mejores recomendaciones.
+Otra  aplicación común es la predicción de series de tiempo (como los precios de las acciones), que también tiene  todo un cuerpo de literatura dedicado a ella.   
+Hay muchas más tareas de aprendizaje automático,  mucho más de lo que podemos enumerar aquí, y le sugerimos  buscar información en libros, documentos de investigación y comunidades en línea para encontrar los paradigmas que mejor se aplican a su situación.
+ 
+ 
+\subsection{Modelado probabilístico, inferencia y programación probabilística}
+
+La mayoría de los paquetes de aprendizaje automático proporcionan modelos de aprendizaje automático predefinidos que aplican un algoritmo particular. Sin embargo, muchos problemas del mundo real tienen 
+una  particular  estructura  que se incorpora correctamente al modelo, y puede producir predicciones con buen  rendimiento.    Generalmente la estructura de un problema particular se puede expresar
+utilizando el lenguaje de la teoría de la probabilidad. Dicha estructura surge comúnmente 
+de tener un modelo matemático de la situación que se  desea predecir.  
+Para ilustrar lo que queremos decir con un problema estructurado, considere el siguiente ejemplo.\\
+
+
+Supongamos que desea crear una aplicación para dispositivos móviles que proporcione una estimación de la  posición muy detallada en un espacio al aire libre, para ayudar a los usuarios a 
+navegar por un sitio histórico. 
+Un celular proporciona muchos sensores para ayudarlo a obtener mediciones de 
+ubicación precisas, como el GPS, acelerómetro y brújula. También tienes un mapa 
+exacto de la zona. Este problema es altamente  estructurado. 
+También  conoce  dónde están los caminos y los puntos de interés sobre el mapa, y  tiene las posiciones aproximadas del GPS, el acelerómetro y la brújula en el dispositivo
+del usuario le proporcionan mediciones relativas muy precisas.
+Uniendo toda esta información en un sistema de aprendizaje automático de caja negra para predecir 
+la posición, podría no ser la mejor idea. Esto desperdiciaría toda la información que ya conoce  sobre cómo funciona el mundo real.
+Si la brújula y el acelerómetro te dicen que un usuario va al norte, 
+y el GPS te dice que el usuario va al sur, probablemente no puedas confiar en el GPS.
+Si su estimación de posición le dice que el usuario acaba de caminar
+a través de una pared, también debe ser muy escéptico.
+Es posible expresar esta situación mediante un modelo probabilístico,  y luego usa el aprendizaje automático o  inferencia probabilistica para averiguar cuánto debe confiar en cada medición y razonar
+sobre cuál es la mejor suposición para la ubicación de un usuario.\\
+
+
+Una vez que haya expresado la situación y su modelo de cómo funcionan los diferentes factores
+juntos de la manera correcta, existen métodos para calcular las predicciones utilizando estos
+modelos personalizados directamente.  
+El más general de estos métodos se llaman lenguajes de programación probabilística, 
+y proporcionan una manera muy elegante y compacta de expresar un problema de aprendizaje.
+
+Como ejemplos populares de lenguajes de programación probabilísticos son
+PyMC  (que se puede usar en Python) y Stan (un marco que se puede usar desde
+varios lenguajes, incluido Python).   Aunque estos paquetes requieren cierta comprensión de la teoría de probabilidad, simplifican significativamente la creación de nuevos modelos.
+
+
+\subsection{Redes neuronales}
+
+
+Hemos  introducido brevemente el tema de  redes neuronales en los capítulos \ref{Cap2} y \ref{Cap7}, este es un área de aprendizaje automático en rápida evolución, con innovaciones y nuevas aplicaciones que se anuncian semanalmente.  Los recientes avances en aprendizaje automático e inteligencia artificial, como la victoria del programa Alpha Go contra campeones humanos en el juego de Go, como la mejora constante del rendimiento de la comprensión del habla, y la disponibilidad de traducción del habla  casi instantánea, todos han sido impulsados por estos avances.
+El  progreso en este campo es tan rápido que cualquier referencia actual sobre la técnica pronto quedará obsoleta, el libro reciente de Aprendizaje Profundo de Ian Goodfellow, Yoshua Bengio y Aaron Courville (MIT Press) es una introducción completa al tema\footnote{En      
+\href{http://www.deeplearningbook.org/}{\textcolor{vino}{http://www.deeplearningbook.org/} }  puede ver una versión preliminar de Deep Learning.}.
+
+
+\subsection{Escalado  datas  grandes}    %  Scaling to Larger Datasets
+
+En este libro  hemos  asumimos que los datos con  que trabajamos siempre se podían organizase en un arreglo NumPy o en una matriz  sparse  de SciPy  almacenados  en la memoria (RAM). A pesar de que los servidores modernos a menudo tienen cientos de gigabytes (GB) de RAM, esta es una restricción fundamental del tamaño de los datos con los que se puede trabajar. Pero, no todo el mundo puede  comprar una máquina tan grande, o incluso alquilar  un proveedor de la nube. En la mayoría de las aplicaciones, la data  que se usa para construir un sistema de aprendizaje automático son relativamente pequeños,  y pocos conjuntos de datos de aprendizaje automático consisten en cientos de gigabits de datos o más. Esto se hace ampliando la memoria  RAM o alquilando una máquina de un proveedor en la nube,   una solución viable en muchos casos. Sin embargo, si necesita trabajar con terabytes de datos, o necesita  para  procesar grandes cantidades de datos con un presupuesto,  existen dos estrategias básicas: aprendizaje out-of-core (fuera de núcleo) y paralelización en un clúster.\\
+   
+   
+El aprendizaje  out-of-core (fuera de núcleo)   describe el aprendizaje de datos que no se 
+pueden almacenar en la memoria, pero donde el aprendizaje tiene lugar en una sóla computadora
+ (o incluso un sólo procesador dentro de una computadora).  
+Los datos se leen desde una fuente como el disco duro o la red, ya sea una muestra a la vez o en trozos de múltiples muestras, de modo que cada trozo encaja en la RAM. Este subconjunto de datos se procesa y el modelo se actualiza para reflejar lo que se aprendió de los datos.  Luego, este trozo de datos se descarta (borra) y se lee el siguiente bit de datos.    El aprendizaje  Out-of-core  (fuera de núcleo) se implementa para algunos de los modelos en {\ttfamily{ scikit-learn}}, puede encontrar detalles sobre él en la 
+\href{https://scikit-learn.org/stable/modules/scaling_strategies.html#scaling-with-instances-using-out-of-core-learning}{\textcolor{vino}{guía del usuario en línea}}.
+Debido a que el aprendizaje   out-of-core  requiere que todos los datos sean procesados por una sóla computadora, esto puede llevar a largos tiempos de ejecución en datas muy grandes. Además, no todos los algoritmos de aprendizaje automático se pueden implementar de esta manera.
+
+
+La otra estrategia para el escalado es distribuir o repartir  los datos sobre múltiples máquinas en  clúster de cómputo, y permitir que cada computadora procese parte de los datos. Esto puede ser mucho más rápido para algunos modelos, y el tamaño de los datos que se pueden procesar sólo está limitado por el tamaño del clúster. Sin embargo, esos cálculos a menudo requieren una infraestructura relativamente compleja.
+ 
+
+Una de las plataformas informáticas repartida más populares en
+el este  momento es la plataforma  de {\ttfamily {spark}}  construida sobre {\ttfamily {Hadoop.  
+ Spark }}  incluye  alguna  funcionalidad  de  aprendizaje  automático dentro del paquete {\ttfamily MLLib}.  Si sus datos ya están en un Sistema de archivos  {\ttfamily {Hadoop}}, o ya está utilizando {\ttfamily Spark } para preprocesar sus datos, esto podría ser la opción más sencilla. 
+
+
+
+Sin embargo, si no se dispone  de esa infraestructura, establecer e integrar un   clúster de {\ttfamily spark} podría ser un esfuerzo demasiado grande. El paquete {\ttfamily vw} mencionado anteriormente proporciona algunas características para distribuir o  repartir,  y podría ser una mejor solución en este caso.
+
+
+\subsection{Perfeccionando tus habilidades}
+
+Al igual que con muchas cosas en la vida, sólo la práctica le permitirá convertirse en un experto en los temas que cubrimos en este libro. La extracción de características, el preprocesamiento, la visualización y la construcción de modelos pueden variar ampliamente entre diferentes tareas y diferentes conjuntos de datos. Tal vez tenga la suerte de tener ya acceso a una variedad de conjuntos de datos y tareas. 
+ 
+Si todavía no tiene una tarea en mente, un buen lugar para empezar son las competiciones de aprendizaje automático, en las que se publica un conjunto de datos con una tarea determinada, y los equipos compiten en la creación de las mejores predicciones posibles. Muchas empresas, organizaciones sin fines de lucro y universidades organizan estas competiciones. Uno de los lugares más populares para encontrarlos es  
+ \href{https://www.kaggle.com/}{\textcolor{vino}{Kaggle}}, 
+un sitio web que organiza regularmente concursos de ciencia de datos, algunos de los cuales tienen un premio muy atractivo en dinero.\\
+
+Los foros de Kaggle también son una buena fuente de información sobre las últimas 
+herramientas y trucos en aprendizaje automático, y una amplia gama de dataset que 
+están disponibles en el sitio.
+Incluso se pueden encontrar más conjuntos de datos con tareas asociadas en la plataforma
+ \href{https://www.openml.org/}{\textcolor{vino}{OpenML}}, 
+  que aloja más de 20.000 datasets
+  con más de 50.000 tareas de aprendizaje automático asociadas. Trabajar con estos conjuntos 
+  de datos puede brindar una gran oportunidad para practicar sus habilidades de
+  aprendizaje automático.\\
+
+ 
+ 
+  Una desventaja de las competiciones es que ya
+  proporcionan una métrica particular para optimizar, y por lo general un conjunto de datos fijo y preprocesado. Tenga en cuenta que definir el problema y recoger los datos también son aspectos importantes de los problemas del mundo real, y que representar el problema de la manera
+  correcta podría ser mucho más importante que exprimir el último porcentaje 
+  de exactitud de un clasificador.
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Conclusión}
+
+Esperamos haberle convencido de la utilidad del aprendizaje automático en una 
+amplia variedad de aplicaciones y de la facilidad con que se puede implementar el aprendizaje 
+automático en la práctica. Siga investigando los datos y no pierda de vista el panorama general.
+
+
+
+
+%          Desplieges  https://cloud.ibm.com/docs/solution-tutorials?topic=solution-tutorials-create-deploy-retrain-machine-learning-model&locale=es                                                                                            ..  https://aprendeia.com/guia-para-implementar-los-modelos-de-machine-learning/ 
+
+
+%   the following sequence of command

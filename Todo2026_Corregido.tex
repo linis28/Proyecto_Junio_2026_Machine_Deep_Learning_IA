@@ -1,0 +1,73 @@
+
+
+
+
+\documentclass[12pt,twoside]{report}
+
+% =========================================================================
+% 1. PAQUETES Y CONFIGURACIONES (Preámbulo)
+% =========================================================================
+\input{PreambuloC1}        % Carga tu preámbulo base
+\usepackage{makeidx}       % El paquete de índice va AQUÍ en el preámbulo
+\makeindex                 % Se inicializa el índice aquí siempre
+
+% NOTA CRÍTICA: Asegúrate de que dentro de 'PreambuloC1' o justo aquí abajo 
+% tengas cargados: \usepackage{listings}, \usepackage{graphicx} y \usepackage{hyperref}
+% Si no los tienes en 'PreambuloC1', descomenta las siguientes líneas:
+% \usepackage{listings}
+% \usepackage{graphicx}
+% \usepackage{hyperref}
+
+% =========================================================================
+% 2. CUERPO DEL DOCUMENTO (Frontera Estricta)
+% =========================================================================
+\begin{document}
+	
+	\include{PortadaC1}        % La portada va estrictamente DESPUÉS de \begin{document}
+		
+		% --- Capítulos del libro de Machine Learning ---
+		\include{Introducion17_09_2020}  
+		\include{Supervisado27_09_2020}  
+		\include{NoSupervisado02_10_2020}
+		\include{IngenieriaC04_10_2020}
+		\include{Evaluando10_09_2020} 
+		\include{Pipeline15_10_2020} 
+		\include{Texto18_10_2020}   
+		\include{Resumen08_25_2020}
+		
+		\newpage
+		
+		% =========================================================================
+		% 3. ÍNDICE ALFABÉTICO
+		% =========================================================================
+		\index{A@\textbf{\huge{A}}|Rolosaysnopage} 
+		\index{B@\textbf{\huge{B}}|Rolosaysnopage}
+		\index{C@\textbf{\huge{C}}|Rolosaysnopage}
+		\index{D@\textbf{\huge{D}}|Rolosaysnopage}
+		\index{E@\textbf{\huge{E}}|Rolosaysnopage}
+		\index{F@\textbf{\huge{F}}|Rolosaysnopage} 
+		\index{G@\textbf{\huge{G}}|Rolosaysnopage}
+		\index{H@\textbf{\huge{H}}|Rolosaysnopage}
+		\index{I@\textbf{\huge{I}}|Rolosaysnopage}
+		\index{J@\textbf{\huge{J}}|Rolosaysnopage}
+		\index{K@\textbf{\huge{K}}|Rolosaysnopage} 
+		\index{L@\textbf{\huge{L}}|Rolosaysnopage}
+		\index{M@\textbf{\huge{M}}|Rolosaysnopage}
+		\index{N@\textbf{\huge{N}}|Rolosaysnopage}
+		\index{O@\textbf{\huge{O}}|Rolosaysnopage} 
+		\index{P@\textbf{\huge{P}}|Rolosaysnopage}
+		\index{Q@\textbf{\huge{Q}}|Rolosaysnopage}
+		\index{R@\textbf{\huge{R}}|Rolosaysnopage}
+		\index{S@\textbf{\huge{S}}|Rolosaysnopage}
+		\index{T@\textbf{\huge{T}}|Rolosaysnopage} 
+		\index{U@\textbf{\huge{U}}|Rolosaysnopage}
+		\index{V@\textbf{\huge{V}}|Rolosaysnopage}
+		\index{W@\textbf{\huge{W}}|Rolosaysnopage}
+		\index{X@\textbf{\huge{X}}|Rolosaysnopage}
+		\index{Y@\textbf{\huge{Y}}|Rolosaysnopage} 
+		\index{Z@\textbf{\huge{Z}}|Rolosaysnopage}
+		
+		\addcontentsline{toc}{chapter}{Índice alfabético}    
+		\printindex 
+		
+	\end{document}

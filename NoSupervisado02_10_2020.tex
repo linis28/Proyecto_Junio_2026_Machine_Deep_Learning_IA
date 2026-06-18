@@ -1,0 +1,2950 @@
+
+
+
+
+
+
+\renewcommand{\tablename}{Tabla}
+
+
+\chapter{Aprendizaje no supervisado y preprocesamiento}{\label{Cap3}}
+
+
+
+
+\section{Introducción}
+
+La segunda familia de algoritmos de aprendizaje automático que vamos a discutir son los algoritmos de aprendizaje no supervisado. El aprendizaje no supervisado engloba todo tipo de aprendizaje automático donde no se conoce ningún resultado, no hay una guía  que instruya al algoritmo en el aprendizaje. En el aprendizaje no supervisado, el algoritmo de aprendizaje sólo se muestra los datos de entrada y se le pide que extraiga el conocimiento de estos datos.
+
+\subsection{Tipos de aprendizaje no supervisado}
+
+
+
+En este capítulo examinaremos dos tipos de aprendizaje no supervisado: transformaciones de la dataset y clustering. \\ 
+
+Las transformaciones no supervisadas de una dataset  son algoritmos que crean una nueva representación de los datos que podría ser más fácil de entender para los seres humanos u otros algoritmos de aprendizaje automático en comparación con la representación original de los datos. 
+Una aplicación común de las transformaciones no supervisadas es la reducción de dimensionalidad, que toma una representación de alta dimensión de la data, que consta de muchas características, y encuentra una nueva manera de representar estos datos que resume las características esenciales con menos características.  Una aplicación común de la reducción de la dimensionalidad es la reducción a dos dimensiones con fines de visualización.\\
+
+
+Otra aplicación para transformaciones no supervisadas es encontrar las partes o componentes que    {}"{}conforman"{ } ("{}make up"{})  los datos. Un ejemplo de esto es la extracción de temas en colecciones de documentos de texto. Aquí, la tarea es encontrar los temas desconocidos que se hablan en cada documento, y aprender qué temas aparecen en cada documento. Esto puede ser útil para rastrear la discusión de temas como elecciones, control de armas, o estrellas del pop en las redes sociales.\\
+
+
+Por otro lado, los algoritmos de Clustering particionan  los datos en grupos distintos de elementos similares. Como ejemplo, considere la tarea de subir fotos a un sitio de web de redes sociales; para permitirle  organizar sus fotos, el sitio podría querer agrupar  imágenes que muestran a la misma persona. Sin embargo, el sitio no sabe qué imágenes muestran a quién, y no sabe cuántas personas diferentes aparecen en su colección de fotos. Un enfoque sensato sería extraer todas las caras y dividirlas en grupos de caras que parecen similares. Con suerte, estos corresponden a la misma persona, y las imágenes se pueden agrupar para usted.
+
+\subsection{Retos del Aprendizaje no supervisado}
+
+
+El mayor  desafío  en el aprendizaje no supervisado es evaluar si el algoritmo aprendió algo útil. Los algoritmos de aprendizaje no supervisados generalmente se aplican a datos que no contienen información 
+de etiquetas, así que no sabemos cuál debería ser la salida correcta.   Por lo tanto, es muy difícil 
+decir si un modelo lo  "hizo bien".{ }  Por ejemplo, nuestro algoritmo hipotético de clustering  podría haber agrupado todas las imágenes que muestran las caras en el perfil y todas las imágenes de cara completa.   Esto  sin duda sería  una manera posible de dividir una colección de fotos de las caras de la gente, 
+pero no es el que estábamos buscando. Sin embargo, no hay manera para  de "decirle{}"{ } al algoritmo lo 
+que estamos buscando, y a menudo la única manera de evaluar el resultado de un algoritmo no supervisado
+es inspeccionarlo  manualmente.\\
+
+
+Como consecuencia, los algoritmos no supervisados son usados a menudo en un entorno exploratorio,
+cuando un científico de datos quiere comprender mejor los datos, en lugar de formar parte de un sistema automático más grande.  Otra aplicación común para algoritmos no supervisados es que son tratados como un paso de preprocesamiento para algoritmos supervisados. Aprender con una nueva representación de los datos a  pueden mejorar la exactitud de los algoritmos supervisados o pueden conducir a reducir consumo de memoria y
+ de tiempo.\\
+
+
+Antes de comenzar con algoritmos  no supervisados  "{}reales"{}, discutiremos brevemente algunos
+métodos de preprocesamiento que a menudo son útiles. Aunque el preprocesamiento y el escalado se usan a con frecuencia en conjunto con algoritmos de aprendizaje supervisados, los métodos de escalado no hacen uso de la información supervisada, por lo que no están supervisados.
+
+\section{Preprocesamiento y escalado}
+
+En el capítulo anterior vimos que algunos algoritmos, como redes neuronales y SVMs,
+son muy sensibles al  escalado de los datos.  Por lo tanto, una práctica común es ajustar las características para que la representación de datos sea más adecuada para estos algoritmos. Generalmente   se trata de un simple re-escalado por característica,  y cambio  en la data. El siguiente código  muestra un  ejemplo simple y muy claro de resultado de la aplicación del escalado de una  data (Figura \ref{Simples}):\\
+
+
+\begin{lstlisting}  % [frame=single]
+
+In[2]: mglearn.plots.plot_scaling()
+
+\end{lstlisting} 
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.55]{../Imagen_Machine/Simples}
+	\caption{Diferentes formas de reescalar y preprocesar un conjunto de datos}
+	\label{Simples}
+\end{figure}
+
+
+\subsection{Diferentes tipos de pre-procesamiento de datos}
+
+El primer gráfico de la Figura \ref{Simples} muestra  datos sintéticos con dos clases y  dos caracteristicas. La primera característica (en eje x) se encuentra en un rango  entre 10 y 15, y la segunda característica (en eje y) en un rango entre 1 y 9.\\
+
+
+Los demás  gráficos muestran cuatro formas diferentes de transformar los datos que  producen  rangos más  estándar.  La función  {\ttfamily StandardScaler} de {\ttfamily scikit-learn} asegura que cada característica tenga  media igual a 0  y  varianza  1, lo que hace que todas las características tengan la misma magnitud; sin embargo, esta escala no garantiza ningún mínimo ni máximo en particular para valores de las características. \\
+
+
+
+
+{\ttfamily RobustScaler} funciona de manera similar a {\ttfamily StandardScaler}  en
+que asegura que las propiedades estadísticas para cada característica están en la 
+misma escala.  Sin embargo, {\ttfamily RobustScaler} utiliza la mediana y los cuartiles\footnote{\scriptsize	  La mediana de un conjunto de números es el número x tal que la mitad de los números son más pequeños que x y la mitad de los números son más grandes que x. El cuartil inferior es el número x tal que un cuarto de los números son más pequeños que x, y el cuartil superior es el número x tal que un cuarto de los números son más grandes que x.},  en lugar de
+media y varianza. Esto hace que  {\ttfamily  RobustScaler} ignore los puntos de datos que son muy
+diferente del resto (como errores de medición).  Estos extraños  puntos en los  datos  son llaman valores atípicos, y pueden causar problemas para otras técnicas de escalado.    Por otro lado, el {\ttfamily MinMaxScaler}, cambia los datos de modo que todas las características encuentren exactamente entre 0 y 1.    Para la data bidimensionales esto significa que todos los datos están contenidos dentro del rectángulo creado por el eje x entre 0 y 1 y el eje y entre 0 y 1. \\
+
+
+Finalmente, el {\ttfamily Normalizer}  hace un tipo muy diferente de re-escalado.  Escala cada punto de datos de tal manera que el vector de característica tiene una longitud euclidiana de 1. En otras palabras, proyecta un punto de datos en el círculo (o esfera, en el caso de dimensiones superiores) con un radio de 1. Esto significa que cada punto de datos se escala por un número diferente (inverso de su longitud). Esta normalización se utiliza a menudo cuando sólo la dirección (o ángulo) de los datos es importate,  y no la longitud del vector de característica.
+
+
+\subsection{Aplicando transformaciones a la Data}
+
+
+Ahora que hemos visto lo que hacen los diferentes tipos de transformaciones,  lo aplicaremos  usando  {\ttfamily scikit-learn}.  Usaremos la data de cáncer que vimos en el Capítulo \ref{Cap2}. Los métodos de pre-procesamiento como los escaladores generalmente se aplican  antes de ejecutar un algoritmo  de aprendizaje automático. 
+
+Por ejemplo, digamos que queremos aplicar el kernel SVM  al conjunto de datos de cáncer,  usado {\ttfamily MinMaxscaler} para pre- procesar los datos. Comencemos cargando la data y dividiéndola en los dos conjuntos,  en el de entrenamiento y  prueba (necesitamos los dos conjuntos separados, el de  entrenamiento y el de prueba para evaluar el modelo supervisado que construiremos después del pre-procesamiento):\\
+
+\begin{lstlisting}  % [frame=single]	
+
+In[3]: from sklearn.datasets import load_breast_cancer
+       from sklearn.model_selection import train_test_split
+       cancer = load_breast_cancer()
+   
+       X_train, X_test, y_train, y_test = train_test_split(cancer.data,
+             cancer.target, random_state=1)
+       print(X_train.shape)
+       print(X_test.shape)
+
+Out[3]:
+
+    (426, 30)
+    (143, 30)
+
+\end{lstlisting}
+
+
+Recuerde que la dataset  contiene 569  datos, cada uno representado 
+por 30 medidas. Dividimos el conjunto de datos en 426 muestras para el  entrenamiento 
+y 143 la prueba. \\
+
+Al igual que con los modelos supervisados que construimos anteriormente, primero importamos la clase que implica el pre-procesamiento, y luego lo instanceamos:
+ 
+\begin{lstlisting}
+
+In[4]: from sklearn.preprocessing import MinMaxScaler
+   
+       scaler = MinMaxScaler()
+
+\end{lstlisting}
+
+Luego ajustamos el escalador usando el método  {\ttfamily fit}, aplicado sobre los datos de entrenamiento. Para  el {\ttfamily MinMaxscaler}, el método  {\ttfamily fit} calcula el valor mínimo y máximo de cada característica en la  data de entrenamiento. A diferencia de los clasificadores y regresores del Capítulo \ref{Cap2}, al escalador sólo se le proporcionan los datos {\ttfamily (X\_train)}  cuando se llama el {\ttfamily fit},  y   {\ttfamily y\_train} no se utiliza:
+
+
+\begin{lstlisting}  % [frame=single]	
+ 
+In[5]: scaler.fit(X_train)
+
+Out[5]:
+
+   MinMaxScaler(copy=True, feature_range=(0, 1))
+
+\end{lstlisting}
+
+
+
+Para aplicar la transformación que acabamos de ver,  es decir, escalar la data de entrenamiento se usa
+ el método {\ttfamily transform}   de  {\ttfamily scaler}.
+ El método de {\ttfamily transform}  es  usado en  {\ttfamily Scikit-learn} siempre que un modelo devuelve una nueva representación de los datos:\\	
+ 
+\begin{lstlisting}  % [frame=single]
+
+In[6]: # transform data
+       X_train_scaled = scaler.transform(X_train)
+       # print dataset properties before and after scaling
+       print("transformed shape: {}".format(X_train_scaled.shape))
+       print("per-feature minimum before scaling:\n {}".format(
+              X_train.min(axis=0)))
+       print("per-feature maximum before scaling:\n {}".format(
+              X_train.max(axis=0)))
+       print("per-feature minimum after scaling:\n {}".format(
+              X_train_scaled.min(axis=0)))
+       print("per-feature maximum after scaling:\n {}".format(
+              X_train_scaled.max(axis=0)))
+
+Out[6]:
+
+    transformed shape: (426, 30)
+    per-feature minimum before scaling:
+     [ 6.98  9.71  43.79  143.50   0.05     0.02   0.   0.   0.11
+       0.05  0.12  0.36     0.76   6.80     0.     0.   0.   0.
+       0.01  0.    7.93    12.02   50.41  185.20   0.07 0.03  0.
+       0.    0.16  0.06]
+
+    per-feature maximum before scaling:
+     [ 28.11  39.28  188.5  2501.0    0.16   0.29    0.43     0.2
+        0.300  0.100   2.87    4.88  21.98  542.20   0.03     0.14
+        0.400  0.050   0.06    0.03  36.04  49.54  251.20  4254.00
+        0.220  0.940   1.17    0.29   0.58  0.15]
+     
+    per-feature minimum after scaling:
+     [ 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.
+       0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0. 0.]
+    
+    per-feature maximum after scaling:
+     [ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.
+       1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.]
+
+\end{lstlisting}
+
+
+La data transformada tienen la misma forma que los datos originales; las características simplemente se cambian y se escalan. Puede ver que todas las características están ahora entre 0 y 1, como se desea. \\
+
+
+Para aplicar el SVM a la data escalada,  necesitamos también  transformar el conjunto de prueba.
+Esto se hace de nuevo llamando al método  {\ttfamily transform}, esta vez a { \ttfamily X\_test}:
+
+
+\begin{lstlisting}  % [frame=single]
+
+In[7]: # transform test data
+       X_test_scaled = scaler.transform(X_test)
+       # print test data properties after scaling
+       print("per-feature minimum after scaling:\n{}".format(
+             X_test_scaled.min(axis=0)))
+       print("per-feature maximum after scaling:\n{}".format(
+          X_test_scaled.max(axis=0)))
+   
+   Out[7]:
+   
+   per-feature minimum after scaling:
+   [ 0.034  0.023  0.031  0.011  0.141  0.044  0.  0.  0.154  -0.006
+    -0.001  0.006  0.004  0.001  0.039  0.011  0.  0.  -0.032  0.007
+     0.027  0.058  0.02   0.009  0.109  0.026  0.  0.  -0.    -0.002]
+  
+   per-feature maximum after scaling:
+   [ 0.958  0.815  0.956  0.894  0.811  1.22  0.88  0.933  0.932  1.037
+     0.427  0.498  0.441  0.284  0.487  0.739 0.767 0.629  1.337  0.391
+     0.896  0.793  0.849  0.745  0.915  1.132 1.07  0.924  1.205  1.631]
+
+
+\end{lstlisting}
+
+De manera sorprendente, puede ver que para el conjunto de prueba, después de  escalar, el  mínimo  y  máximo no son 0 y 1. ¡Algunas de las características están incluso fuera del rango 0-1!. La explicación es que el {\ttfamily MinMaxscaler} (y todos los otros escaladores) siempre aplica exactamente la misma transformación del entrenamiento y al conjunto de prueba. Esto significa que el método de {\ttfamily transform} siempre resta el mínimo establecido por entrenamiento y se divide por el rango del   entrenamiento, que podría ser diferente del mínimo y rango para el conjunto de prueba.
+
+
+
+\subsubsection{Escalado para los Datos de Entrenamiento y Prueba de la misma forma}
+
+
+ Es importante aplicar exactamente la misma transformación al conjunto de entrenamiento y  prueba, para que el modelo supervisado funcione bien en el conjunto de prueba. El siguiente ejemplo (Figura \ref{IgualScala}) ilustra lo que sucedería si usáramos el mínimo y el rango del conjunto de prueba: 
+
+
+\begin{lstlisting}  
+
+In[8]: from sklearn.datasets import make_blobs
+       # make synthetic data
+       X, _ = make_blobs(n_samples=50, centers=5, random_state=4, cluster_std=2)
+       # split it into training and test sets
+       X_train, X_test = train_test_split(X, random_state=5, test_size=.1)
+   
+       # plot the training and test sets
+       fig, axes = plt.subplots(1, 3, figsize=(13, 4))
+
+       axes[0].scatter(X_train[:, 0], X_train[:, 1],
+                       c=mglearn.cm2(0), label="Training set", s=60)
+       axes[0].scatter(X_test[:, 0], X_test[:, 1], marker='^',
+                       c=mglearn.cm2(1), label="Test set", s=60)
+       axes[0].legend(loc='upper left')
+       axes[0].set_title("Original Data")
+   
+       # scale the data using MinMaxScaler
+       scaler = MinMaxScaler()
+       scaler.fit(X_train)
+       X_train_scaled = scaler.transform(X_train)
+       X_test_scaled = scaler.transform(X_test)
+   
+       # visualize the properly scaled data
+       axes[1].scatter(X_train_scaled[:, 0], X_train_scaled[:, 1],
+                       c=mglearn.cm2(0), label="Training set", s=60)
+       axes[1].scatter(X_test_scaled[:, 0], X_test_scaled[:, 1], marker='^',
+                       c=mglearn.cm2(1), label="Test set", s=60)
+       axes[1].set_title("Scaled Data")
+   
+       # rescale the test set separately
+       # so test set min is 0 and test set max is 1
+       # No haga esto! Solo para proposito de ilustracion. 
+       test_scaler = MinMaxScaler()
+       test_scaler.fit(X_test)
+       X_test_scaled_badly = test_scaler.transform(X_test)
+   
+       # visualize wrongly scaled data
+       axes[2].scatter(X_train_scaled[:, 0], X_train_scaled[:, 1],
+                       c=mglearn.cm2(0), label="training set", s=60)
+       axes[2].scatter(X_test_scaled_badly[:, 0], X_test_scaled_badly[:, 1],
+                       marker='^', c=mglearn.cm2(1), label="test set", s=60)
+       axes[2].set_title("Improperly Scaled Data")
+   
+       for ax in axes:
+           ax.set_xlabel("Feature 0")
+           ax.set_ylabel("Feature 1")
+
+\end{lstlisting} 
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.545]{../Imagen_Machine/IgualScala}
+	\caption{Efecto del escalado en la data de entrenamiento y prueba, a la izquierda data originales, en el centro datos  escalados juntos, y  a la derecha escalado  por separado}
+	\label{IgualScala}
+\end{figure}
+
+El primer gráfico es un conjunto de datos bidimensionales sin escalar, los puntos del conjunto de entrenamiento se presentan como círculos y los de prueba  como triángulos. El segundo gráfico    son los mismos datos, pero escalado usando el {\ttfamily MinMaxscaler}. Aquí, llamamos el {\ttfamily fit}  sobre el entrenamiento, y luego llamado transformación en data de entrenamiento y prueba.  Se puede ver que la data en el segundo  gráfico   se ve idéntico a la primera; sólo las marcas en los ejes han cambiado. Ahora todas las características están entre 0 y 1. También se observa que los valores mínimos y máximos de las características para los datos de prueba (los triángulos) no son 0 y 1.\\
+
+\vspace{-2cm}	
+\hspace{-1cm}
+{\fcolorbox{red}{white}{ 		
+		
+		\begin{minipage}[16cm]{13.5cm}    %   centrado, largo y ancho                {14cm} 
+			\vspace{0.4cm}	
+			
+			
+			\begin{center}
+				{\bf Atajos y Alternativas Eficientes}
+			\end{center}	
+			
+			
+			
+			Con frecuencia, se quiere ajustar un modelo sobre algún conjunto de datos, y luego transformarlo.
+			Esta es una tarea muy común, el cual  puede ser calculado más eficientemente  por un simplemente llamando {\ttfamily fit}  y  luego  transformar. Para este caso, todos los modelos que tienen un método de {\ttfamily transform}  también tienen un método {\ttfamily fit\_transform}. Veamos el próximo ejemplo utilizando el método  {\ttfamily Standardscaler}:\\
+			
+			
+			{\ttfamily   	{\scriptsize{  	 
+						
+						In[9]:\\		
+						{ \color{blue}									
+							
+							\hspace{0.3cm}	from sklearn.preprocessing import StandardScaler 
+							
+							\hspace{0.3cm}	scaler = StandardScaler() 
+							
+							\hspace{0.3cm}	\# calling fit and transform in sequence (using method chaining) 
+							
+							\hspace{0.3cm}	X\_scaled = scaler.fit(X).transform(X)  
+							
+							\hspace{0.3cm}	\# same result, but more efficient computation  \vspace{-0.2cm}
+							
+							\hspace{0.3cm}	X\_scaled\_d = scaler.fit\_transform(X)) }  \\}}}
+			
+			
+			Escalar con    {\ttfamily fit\_transform} no es necesariamente el más eficiente para todos los modelos,  pero es una buena práctica utilizar este método cuando se trata de transformar la data de entrenamiento.\\			
+			
+		\end{minipage}
+}}  \\
+
+El tercer  gráfico  muestra lo que sucedería si escalamos el conjunto de entrenamiento y prueba por separado. En este caso, los valores mínimos y máximos de característica para el entrenamiento y el de  prueba  son  0 y 1.   Pero ahora el conjunto de datos parece diferente. Los puntos de prueba se movieron incongruentemente al conjunto de entrenamiento, ya que fueron escalados de manera diferente. Cambiamos la disposición de los datos de una manera arbitraria.  Claramente esto no es lo que queremos hacer. \\
+
+Otra forma de ilustrar este inconveniente es la siguiente, imaginen que su conjunto de prueba tiene un solo punto. No hay manera de escalar un solo punto correctamente, para cumplir con los requerimientos mínimos y máximos del {\ttfamily MinMaxscaler}. El tamaño de su conjunto de pruebas no debe cambiar su procesamiento.\\
+
+%\newpage
+
+
+
+
+
+\subsection{Efecto del preprocesamiento en Aprendizaje \\ Supervisado}
+
+
+Ahora volvamos a la data de cáncer y veamos el efecto del uso del escalador  {\ttfamily MinMaxscaler} en el aprendizaje de  SVC (esta es una forma diferente de escalar de la misma forma que hicimos en el capítulo \ref{Cap2}). Primero, ajustemos el SVC sobre  los datos originales para luego comparar:
+
+
+\begin{lstlisting}  % [frame=single]	
+
+In[10]: from sklearn.svm import SVC
+   
+        X_train, X_test, y_train, y_test = train_test_split(cancer.data, 
+               cancer.target, random_state=0)
+        svm = SVC(C=100)
+        svm.fit(X_train, y_train)
+        print("Test set accuracy: {:.2f}".format(svm.score(X_test, y_test)))
+
+Out[10]:
+
+    Test set accuracy: 0.63
+
+\end{lstlisting} 
+
+
+Ahora, escalamos la data usando {\ttfamily MinMaxScaler} antes de ajustar el modelo SVC:
+
+
+\begin{lstlisting}  
+
+In[11]: # preprocessing using 0-1 scaling
+        scaler = MinMaxScaler()
+        scaler.fit(X_train)
+        X_train_scaled = scaler.transform(X_train)
+        X_test_scaled = scaler.transform(X_test)
+   
+        # learning an SVM on the scaled training data
+        svm.fit(X_train_scaled, y_train)
+        # scoring on the scaled test set
+        print("Scaled test set accuracy: {:.2f}".format(
+               svm.score(X_test_scaled, y_test)))
+
+Out[11]:
+
+    Scaled test set accuracy: 0.97
+
+\end{lstlisting} 
+
+Como vimos antes, el efecto de escalar los datos es muy significativo. Sin embargo,
+escalar los datos no implica ninguna complicación matemática, una buena  práctica usar las
+herramientas que provee  {\ttfamily scikit-learn}  para escalar, en lugar de reimplementarlos por si mismo,
+evitando  cometer errores, pues es fácil  equivocarse  aún en estos simples cálculos.
+
+También se puede  reemplazar fácilmente   un algoritmo preprocesador con otro cambiando la
+clase a usar, como todas las clases pre-procesadas tiene la misma interfaz, que  consisten  en
+ los  métodos {\ttfamily fit}  y  {\ttfamily  transform}:\\
+
+
+
+\begin{lstlisting}  %[basicstyle=\scriptsize] % [ frame=single]
+
+In[12]: # preprocessing using zero mean and unit variance scaling
+        from sklearn.preprocessing import StandardScaler
+        scaler = StandardScaler()
+        scaler.fit(X_train)
+        X_train_scaled = scaler.transform(X_train)
+        X_test_scaled = scaler.transform(X_test)
+   
+        # learning an SVM on the scaled training data
+        svm.fit(X_train_scaled, y_train)
+        # scoring on the scaled test set
+        print("SVM test accuracy: {:.2f}".format(
+               svm.score(X_test_scaled, y_test)))
+
+Out[12]:
+
+    SVM test accuracy: 0.96
+
+\end{lstlisting} 
+
+Ahora que hemos visto qué tan simple son las transformaciones para preprocesar  los datos, podemos ir
+ hacia transformaciones más interesantes usandas en el aprendizaje no supervisado.
+
+
+\section{Reducción de Dimensionalidad, Extracción de Característica, y  Aprendizaje Múltiple}
+
+Como discutimos anteriormente, transformar la data usando aprendizaje no supervisión puede tener
+muchas motivaciones. Entre las motivaciones más comunes tenemos la visualización, datos a comprimir, o  en busca de una representación que sea más informativa para el  procesamiento.\\
+
+El análisis de Componentes Principales es  uno de los algoritmos más simple y ampliamente usados en   el aprendizaje no supervisado; en este texto consideraremos  también otros dos algoritmos: factorización Matricial no negativa (non-negative matrix factorization   NMF), el cual sirve comúnmente para extracción de característica, y t-SNE, que se emplea  comúnmente para visualizar la dispersión  en gráficos  de dos dimensiones.
+
+
+\subsection{Análisis de componentes principales (PCA)}
+
+
+El análisis de componentes principales es un método que rota la data de forma tal que las
+ características resultantes (rotadas) son estadísticamente no correlacionadas. Esta rotación es 
+frecuentemete seguida por la selección de un subconjunto de características nuevas, de acuerdo   
+a su importancia  para explicar la data.   El siguiente ejemplo (Figura \ref{CompontPric}) ilustra el efecto de PCA sobre la dataset  sintética con dos dimensiones:\\
+
+
+\begin{lstlisting}  % [frame=single]	
+
+In[13]: mglearn.plots.plot_pca_illustration()
+
+\end{lstlisting} 
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.95]{../Imagen_Machine/CompontPric}
+	\caption{Transformación de la  Data con PCA}
+	\label{CompontPric}
+\end{figure}
+
+El primer gráfico (parte izquierda superior) muestra los datos originales, con puntos coloreados para hacer 
+distinción entre ellos.   El algoritmo procede  primero para encontrar la dirección de máxima varianza, y la
+etiqueta  como  "{}Componente 1{}". { }  Ésta es la dirección (o el vector) en la data que contiene más información, en otras palabras, la dirección a lo largo de la cual las características están más  correlacionadas unas con otras. El algoritmo encuentra la dirección que contiene  mayor  información,  y la hace  ortogonal (ángulo recto) para la primera dirección. En el caso de dos dimensiones, hay sólo una orientación posible que está en un ángulo recto, pero en espacios de  alta  dimensión podrían ser  muchas direcciones  (infinitamente) ortogonales.   Aunque las dos componentes se trazan como flechas, realmente no tiene importancia donde la va la cabeza y la cola;  pudimos haber  graficado la primera  componente del centro  hasta la izquierda superior en lugar abajo a la derecha inferior.  Las direcciones que se encuentran  en  este proceso son  llamadas  componentes principales,  son las direcciones principales de la varianza de  la  data. En general, hay tantas componentes principales como características originales haya.\\
+
+
+El segundo gráfico (parte superior derecha) muestra la misma data, pero ahora rotando de tal manera que la primera componente principal se alinea con el eje de las abscisas (eje x) y la segunda componente principal se alinea con eje de las ordenadas (eje y).  Antes de la rotación,  la media fue sustraída de la data, así que la data transformada es centrada  en cero. En la representación de las nuevas características (rotada) encontradas por PCA, los dos ejes  son no correlacionados, lo que significa que  la matriz de correlación de la data en esta representación es cero excepto en  la diagonal.
+
+Podemos usar  PCA  para  reducir la  dimensionalidad conservando sólo a algunos de las componentes del principales.   En este ejemplo, podríamos quedarnos sólo con la primer componente principal, como se 
+muestra en el tercer gráfico de la Figura \ref{CompontPric} (parte inferior izquierda). Esto reduce la dataset de dos dimensiones una  dataset de una  dimensión.  
+
+Observe,  que en lugar de conservar  una de las características originales, encontramos la dirección más interesante (esquina izquierda superior  a esquina derecha inferior en el primer gráfico) y se conserva esta dirección, como la primer componente principal. \\
+
+
+Finalmente, podemos deshacer el proceso de rotación y añadir (sumar)  la media  a los datos.
+Este resultado se muestra en el último gráfico  en de la Figura \ref{CompontPric}. Ahora los puntos están 
+ en el espacio de características original, pero conservamos  sólo la información contenida en la primer componente principal.
+ 
+Esta transformación se usa algunas veces para remover efectos de ruido en los datos o para 
+visualizar qué parte de la información es retenida usando los componentes principales.
+
+
+\subsubsection{Aplicándo PCA a la  data de cáncer para visualización}
+
+
+Una de las aplicaciones más comunes de PCA es para visualizar data de alta dimensiones. Como vimos en Capítulo \ref{Cap1}, es difícil de crear gráficos  de dispersión de datos que tiene más de dos características.  Para  el caso de la dataset Iris, se crearon   gráficos con  pares de característica (Figura \ref{Iris}),    generando un cuadro parcial de la data, mostrándo todas las posibles combinaciones de dos en dos características.   Pero si queremos ver la dataset de Cáncer Breast, aún usando  gráficos con  pares de característica no es viable. Esta dataset tiene 30 características, lo cual resultaría  ¡30 * 14 = 420 gráficos  de dispersión   !Nunca podríamos vernos en detalle todos estos gráficos, y mucho menos  intentar comprenderlos.
+
+
+
+Hay una visualización aun más simple que podemos usar,  computando histogramas de
+cada uno de las características para las dos clases, benigno y maligno (Figura \ref{Histogram} ):\\
+
+\begin{lstlisting}  % [frame=single]	
+
+In[14]: fig, axes = plt.subplots(15, 2, figsize=(10, 20))
+        malignant = cancer.data[cancer.target == 0]
+        benign = cancer.data[cancer.target == 1]
+   
+        ax = axes.ravel() 
+
+        for i in range(30):
+            _, bins = np.histogram(cancer.data[:, i], bins=50)
+            ax[i].hist(malignant[:, i], bins=bins, color=mglearn.cm3(0), 
+                        alpha=.5)
+            ax[i].hist(benign[:, i], bins=bins, color=mglearn.cm3(2), 
+                        alpha=.5)
+            ax[i].set_title(cancer.feature_names[i])
+            ax[i].set_yticks(())
+        ax[0].set_xlabel("Feature magnitude")
+        ax[0].set_ylabel("Frequency")
+        ax[0].legend(["malignant", "benign"], loc="best")
+        fig.tight_layout()
+
+
+\end{lstlisting} 
+
+
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=17cm, height=13.6cm, angle=-90]{../Imagen_Machine/Histogram}
+	\caption{Histogramas de características por clase sobre la data de cáncer de mama}
+	\label{Histogram}
+\end{figure}
+
+
+La figura \ref{Histogram} se presenta los histogramas de frecuencia  creados para cada  características y sus dos clases, en cada gráfico se superpone dos histogramas, uno para la clase benigna (azul) y el otro para  la clase maligna (rojo).   Esto nos da alguna idea de cómo  cada característica esta distribuida respecto a las  dos clases, y nos permite  hacer conjeturas en cuanto a qué características  distinguen mejor las muestras malignas y benignas. 
+
+
+
+
+
+
+  Por ejemplo, la característica  “{}smoothness error”{}  parece  poco informativo, porque los dos histogramas  se superponen  en su mayoría, mientras que la característica  “{}worst concave points”{}  parece más informativo, ya que  los histogramas son bastantes  disjuntos.\\
+
+
+Sin embargo, este gráfico no nos muestra nada acerca de las interacciones entre variables y cómo éstas se relacionan con las clases. Usando PCA, podemos capturar las interacciones principales y obtener una imagen un poco más completa.   Podemos encontrar las dos primeras componentes principales, y visualizar los datos en este nuevo espacio bidimensional en un gráfico de dispersión. \\
+
+Antes de aplicar PCA, escalamos la data para que cada característica tenga varianza igual a la  unidad usando {\ttfamily Standardscaler}: 
+
+
+\begin{lstlisting}  % [frame=single]	
+
+
+In[15]: from sklearn.datasets import load_breast_cancer
+        cancer = load_breast_cancer()
+        scaler = StandardScaler()
+        scaler.fit(cancer.data)
+        X_scaled = scaler.transform(cancer.data)
+
+\end{lstlisting} 
+
+ Aplicar la  transformación de PCA  es tan simple como aplicarle una 
+ transformación de preprocesamiento a la data.  Ahora instanciamos el objeto PCA, para  buscar las componentes principales mediante el método {\ttfamily fit}, se  aplica la rotación y la reducción de dimensionalidad haciendo uso de {\ttfamily transform}.
+
+ Por defecto, PCA sólo rota (y los cambios) la data, pero conserva todos los componentes principales. Para reducir la dimensionalidad de la data, necesitamos especificar cuántos componentes queremos conservar al crear el objeto PCA:
+
+
+\begin{lstlisting}  % [frame=single]	
+
+
+In[16]: from sklearn.decomposition import PCA
+        # keep the first two principal components of the data
+        pca = PCA(n_components=2)
+        # fit PCA model to breast cancer data
+        pca.fit(X_scaled)
+   
+        # transform data onto the first two principal components
+        X_pca = pca.transform(X_scaled)
+        print("Original shape: {}".format(str(X_scaled.shape)))
+        print("Reduced shape: {}".format(str(X_pca.shape)))
+
+Out[16]:
+
+    Original shape: (569, 30)
+    Reduced shape: (569, 2)
+
+
+\end{lstlisting} 
+
+Ahora podemos graficar las primeras dos componentes principales (Figura \ref{Com2Pric}):
+
+
+\begin{lstlisting}  
+
+In[17]: # plot first vs. second principal component, colored by class
+        plt.figure(figsize=(8, 8))
+        mglearn.discrete_scatter(X_pca[:, 0], X_pca[:, 1], cancer.target)
+        plt.legend(cancer.target_names, loc="best")
+        plt.gca().set_aspect("equal")      
+        plt.xlabel("First principal component")
+        plt.ylabel("Second principal component")
+
+\end{lstlisting} 
+
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[scale=0.65]{../Imagen_Machine/Com2Pric}
+	\caption{Diagrama de dispersión bidimensional de la data de
+		 cáncer de mama, utilizando las dos primeras componentes principales}
+	\label{Com2Pric}
+\end{figure}
+
+
+Es importante tener en cuenta que PCA es un método no supervisado y no utiliza ninguna clase
+información cuando encuentra la rotación, simplemente toma en cuenta  las correlaciones en la data.
+El diagrama de dispersión de la figura \ref{Com2Pric}, muestra la  primera componente principal contra 
+la  segunda,  y luego usa la información de la clase para colorear los puntos.
+Se puede ver  las dos clases separadas bastante bien en este espacio bidimensional.
+Esto nos lleva a creer que incluso un clasificador lineal (que aprendería una línea en este
+espacio) podría hacer un trabajo razonablemente bueno para distinguir las dos clases.
+ También podemos ver que los puntos malignos (azul) están más extendidos que los puntos benignos (rojo), algo que ya habiamos visto en los histogramas  Figura \ref{Histogram}.\\
+
+
+
+Una desventaja de PCA es que los dos ejes en el gráfico generalmente  no son muy fáciles de interpretar.
+Las componentes principales corresponden a las direcciones de la data  original, por lo que son
+combinaciones de las características originales. Sin embargo, estas combinaciones suelen ser muy
+complejas, como veremos  más adelante. Durante la corrida o ejecusión  las componentes principales son almacenadas en el atributo  {\ttfamily components\_}  del objeto PCA:\\
+
+
+
+\begin{lstlisting}  % [frame=single]	
+
+In[18]: print("PCA component shape: {}".format(pca.components_.shape))
+
+Out[18]:
+
+   PCA component shape: (2, 30)
+
+\end{lstlisting} 
+
+Cada fila en el atributo {\ttfamily components\_  }  corresponde a una componente principal, y están ordenados por  su importancia (la  primera componente principal va primero, y así sucesivamente). Las columnas
+corresponden  al atributo original de las características de los PCA en este ejemplo,  “{}mean
+radius{}”,   “{}mean texture”{},  y así sucesivamente. 
+
+Veamos el contenido de las componentes {\ttfamily components\_}:
+
+\begin{lstlisting} 
+
+In[19]: print("Las dos componentes PAC:\n{}".format(pca.components_))
+
+Out[19]:
+   
+    Las dos componentes PAC:
+    [[ 0.219  0.104  0.228  0.221  0.143  0.239  0.258  0.261  0.138  0.064
+       0.206  0.017  0.21   0.203  0.015  0.17   0.154  0.183  0.042  0.103
+       0.228  0.104  0.237  0.225  0.128  0.21   0.229  0.251  0.123  0.132]
+     [-0.234 -0.06  -0.215 -0.231  0.186  0.152  0.06  -0.035  0.19   0.367
+      -0.106  0.09  -0.089 -0.152  0.204  0.233  0.197  0.13   0.184  0.28
+      -0.22  -0.045 -0.2   -0.219  0.172  0.144  0.098 -0.008  0.142  0.275]]
+
+\end{lstlisting}También podemos visualizar los coeficientes usando un mapa caliente (Figura \ref{Caliente}), que podría ser más fácil de entender:
+
+\begin{lstlisting} 
+
+In[20]: plt.matshow(pca.components_, cmap='viridis')
+        plt.yticks([0, 1], ["First component", "Second component"])
+        plt.colorbar()
+        plt.xticks(range(len(cancer.feature_names)),
+                   cancer.feature_names, rotation=60, ha='left')
+        plt.xlabel("Feature")
+        plt.ylabel("Principal components")
+
+\end{lstlisting} 
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.525]{../Imagen_Machine/Caliente}
+	\caption{Mapa caliente de los dos primeros componentes principales en  la dataset de Cáncer de Mama}
+	\label{Caliente}
+\end{figure}
+
+
+
+Puede ver que en la primer componente, todas las características  tienen el mismo signo ( positivo, pero como señalamos anteriormente, no importa en qué dirección apunte la flecha).   Eso significa que hay una correlación general entre todas las características. En caso de un valor o medida alta, es probable las demás  también sean  altas. La  segunda componente tiene signos diferentes.
+
+Observe que  ambas componentes involucran las 30 características;  esta mezcla de todas las características es lo que hace tan difícil explicar los ejes en la Figura \ref{Caliente}.
+ 
+\subsubsection{Caracteres propios para extracción de características \\  (Eigenfaces\index{eigenface})}
+
+%autovalores
+
+Otra aplicación de PCA que mencionamos anteriormente es la extracción de características.  La idea detrás de la extracción de características es la posibilidad de encontrar una representación de los datos que se adapta mejor al análisis, que la representación original. Un buen
+ejemplo de una aplicación donde la extracción de características es útil es con imágenes.   Las imágenes están formados por píxeles, generalmente almacenados como intensidades de rojo, verde y azul (RGB).  Los objetos en las imágenes generalmente están formados por miles de píxeles, y sólo juntos son  tienen  significado.\\
+
+ Ejemplificaremos la extracción de características  con  una aplicación de PCA, sobre las imágenes de caras etiquetadas de la dataset Wild.   Este conjunto de datos contiene imágenes de caras de celebridades descargadas de Internet,  incluye rostros de políticos, cantantes, actores y atletas de principios de la década del 2000.  Usamos versiones en escala de grises de estas imágenes,  y reducimos  para  un procesamiento más rápido.  Algunas de las imágenes se muestran en la Figura \ref{Caras1}:
+
+\begin{lstlisting} 
+
+In[21]: from sklearn.datasets import fetch_lfw_people
+        people = fetch_lfw_people(min_faces_per_person=20, resize=0.7)
+        image_shape = people.images[0].shape
+   
+        fix, axes = plt.subplots(2, 5, figsize=(15, 8),
+                                  subplot_kw={'xticks': (), 'yticks': ()})
+        for target, image, ax in zip(people.target, people.images, axes.ravel()):
+            ax.imshow(image)
+            ax.set_title(people.target_names[target])
+
+\end{lstlisting} 
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.63]{../Imagen_Machine/Caras1}
+	\caption{Algunas imágenes de las caras etiquetadas en la dataset de Wild}
+	\label{Caras1}
+\end{figure}
+
+
+
+Hay 3.023 imagenes, cada una con 87x65 píxeles de tamaño, que pertenecen a 62 personas diferentes:
+
+
+\begin{lstlisting} 
+
+
+In[22]: print("people.images.shape: {}".format(people.images.shape))
+        print("Number of classes: {}".format(len(people.target_names)))
+
+Out[22]:
+
+    people.images.shape: (3023, 87, 65)
+    Number of classes: 62
+
+\end{lstlisting} 
+
+La dataset  esta un poco sesgada, sin embargo,  contiene una gran cantidad de imágenes de George W. Bush y Colin Powell, como se puede ver en la figura \ref{Caras1}:\\
+
+\begin{lstlisting}  % [frame=single]	
+
+
+In[23]: # contar cuantas veces aparece cada objetivo
+        counts = np.bincount(people.target)
+        # print counts next to target names
+        for i, (count, name) in enumerate(zip(counts, people.target_names)):
+            print("{0:25} {1:3}".format(name, count), end=' ')
+            if (i + 1) % 3 == 0:
+                print()
+
+
+
+Out[23]:
+
+    Alejandro Toledo        39   Alvaro Uribe               35
+    Amelie Mauresmo         21   Andre Agassi               36
+    Angelina Jolie          20   Arnold Schwarzenegger      42
+    Atal Bihari Vajpayee    24   Bill Clinton               29
+    Carlos Menem            21   Colin Powell              236
+    David Beckham           31   Donald Rumsfeld           121
+    George W Bush          530   George Robertson           22
+    Gerhard Schroeder      109   Gloria Macapagal Arroyo    44
+    Gray Davis              26   Guillermo Coria            30
+    Hamid Karzai            22   Hans Blix                  39
+    Hugo Chavez             71   Igor Ivanov                20
+    [...]                   [...]
+    Laura Bush              41   Lindsay Davenport          22
+    Lleyton Hewitt          41   Luiz Inacio Lula da Silva  48
+    Mahmoud Abbas           29   Megawati Sukarnoputri      33
+    Michael Bloomberg       20   Naomi Watts                22
+    Nestor Kirchner         37   Paul Bremer                20
+    Pete Sampras            22   Recep Tayyip Erdogan       30
+    Ricardo Lagos           27   Roh Moo-hyun               32
+    Rudolph Giuliani        26   Saddam Hussein             23
+    Serena Williams         52   Silvio Berlusconi          33
+    Tiger Woods             23   Tom Daschle                25
+    Tom Ridge               33   Tony Blair                144
+    Vicente Fox             32   Vladimir Putin             49
+    Winona Ryder            24
+
+\end{lstlisting}
+
+
+
+Para hacer la data  menos sesgada, sólo tomaremos  50 imágenes de cada persona (de lo contrario, la extracción de características sería abrumadora por la probabilidad de George W. Bush):\\
+
+
+\begin{lstlisting}  
+In[24]: mask = np.zeros(people.target.shape, dtype=np.bool)
+        for target in np.unique(people.target):
+            mask[np.where(people.target == target)[0][:50]] = 1
+   
+        X_people = people.data[mask]
+        y_people = people.target[mask]
+   
+        # scale the grayscale values to be between 0 and 1
+        # instead of 0 and 255 for better numeric stability
+        X_people = X_people / 255.
+
+
+\end{lstlisting} 
+
+Una tarea común en reconocimiento facial es preguntar si una cara no vista anteriormente pertenece a una persona conocida de una base de datos. Esto tiene aplicaciones en la colección de fotos, redes sociales y aplicaciones de seguridad. Una manera de resolver este problema sería construir un clasificador donde cada persona es una clase separada. Sin embargo, por lo general hay muchas personas diferentes en las bases de datos  de cara, y muy pocas imágenes de la misma persona (es decir, muy pocos ejemplos para entrenamiento por clase). Eso hace que sea difícil entrenar a la mayoría de los clasificadores. Además, casi siempre se quiere que la solución al problema tenga la capacidad de añadir fácilmente nuevos datos, en este caso imágenes de gente nueva, sin necesidad de volver a entrenar el modelo. Una solución simple es utilizar un clasificador del un vecino más cercano que busca la imagen más similar a la cara que está clasificando. Este clasificador podría funcionar en principio con un sólo ejemplar de entrenamiento por clase. \\
+
+Veamos qué tan bien  funciona  el clasificador {\ttfamily Kneighborsclassifier}:\\
+
+\begin{lstlisting} 
+In[25]: from sklearn.neighbors import KNeighborsClassifier
+        # split the data into training and test sets
+        X_train, X_test, y_train, y_test = train_test_split(
+              X_people, y_people, stratify=y_people, random_state=0)
+        # build a KNeighborsClassifier using one neighbor
+        knn = KNeighborsClassifier(n_neighbors=1)
+        knn.fit(X_train, y_train)
+        print("Test set score of 1-nn: {:.2f}".format(knn.score(X_test, y_test)))
+
+Out[25]:
+
+    Test set score of 1-nn: 0.27
+
+\end{lstlisting} 
+
+
+En este caso se obtiene  una exactitud del 26,6\%, que en realidad no es tan malo para un problema de  clasificación de 62 clases  (tratar de adivinar al azar le daría alrededor de 1/62 = 1.5\% de exactitud),  pero tampoco es gran cosa.   Sólo identificamos correctamente a una persona cada cuatro veces.
+ 
+  Aquí es donde entra en juego la técnica de PCA. Calcular las distancias en el espacio de píxeles original es una mala manera de medir la similitud entre caras. Cuando se usa una representación de píxeles para comparar dos imágenes, comparamos la escala de grises de cada píxel individual con el valor del píxel en la posición correspondiente en la otra imagen.  Esta representación es muy diferente de cómo los humanos interpretarían la imagen de un rostro, y es difícil capturar los rasgos faciales usando esta representación en bruto.   Por ejemplo, usando distancias de píxeles significa cambiar  una cara por  un píxel que corresponde a la derecha, esto es un cambio drástico, con una representación completamente diferente.  Con  el uso de distances a lo largo de los componentes principales se espera que  mejore la  exactitud.   En este caso, habilitamos la opción de blanqueaqueo de PCA, que re-escala los componentes principales para tener la misma escala. Esto es lo mismo que usar {\ttfamily StandardScaler} después de la transformación. Utilizando nuevamente la data  de la Figura \ref{CompontPric}, el blanqueo corresponde no sólo a rotar los datos, sino también re-escalar para que el gráfico central sea un círculo en lugar de una elipse (ver figura \ref{Blanqueo}):\\
+
+
+\begin{lstlisting}  % [frame=single]	
+
+In[26]: mglearn.plots.plot_pca_whitening()
+
+\end{lstlisting} 
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.55]{../Imagen_Machine/Blanqueo}
+	\caption{Transformación de datos con PCA mediante blanqueamiento}
+	\label{Blanqueo}
+\end{figure}
+
+
+Ajustamos el objeto {\ttfamily PCA}  a los datos de entrenamiento y extraemos las primeras 100 componentes principales. Luego transformamos los datos de entrenamiento y prueba:\\
+
+\begin{lstlisting}  % [frame=single]	
+
+In[27]: pca = PCA(n_components=100, 
+                   whiten=True, random_state=0).fit(X_train)
+        X_train_pca = pca.transform(X_train)
+        X_test_pca = pca.transform(X_test)
+   
+        print("X_train_pca.shape: {}".format(X_train_pca.shape))
+
+Out[27]:
+
+    X_train_pca.shape: (1537, 100)
+
+\end{lstlisting} 
+
+La nueva  data tienen 100 características, las primeras 100 componentes principales. Ahora, podemos usar la nueva representación para clasificar las imágenes usando el clasificador de vecinos más cercanos con un vecino (one-nearest-neighbors):
+
+\begin{lstlisting}  	
+
+In[28]: knn = KNeighborsClassifier(n_neighbors=1)
+        knn.fit(X_train_pca, y_train)
+        print("Test set accuracy: {:.2f}".format(
+                knn.score(X_test_pca, y_test)))
+
+Out[28]:
+
+    Test set accuracy: 0.36
+
+
+\end{lstlisting} 
+
+
+
+La exctitud  mejoró  significativamente, del  26,6\%   al   35,7\%,   confirmando nuestra intuición de que los componentes principales podrían proporcionar una mejor representación de la data.
+
+
+Para los datos de imagen, también podemos visualizar fácilmente los principales componentes que se encuentran. Recuerde que los componentes corresponden a las direcciones en el espacio de entrada. El espacio de entrada aquí  es 50x37  píxeles de la imagen  en  escala de grises, así que las direcciones dentro de este espacio son también 50x37  píxeles de la imagen  en  escala de grises.\\
+
+ Veamos el  primer par de componentes principales (Figura \ref{PrimerPar}):\\
+
+
+
+\begin{lstlisting}  % [frame=single]	
+
+In[29]: print("pca.components_.shape: {}".format(pca.components_.shape))
+
+Out[29]:
+    
+    pca.components_.shape: (100, 5655)
+
+In[30]: fix, axes = plt.subplots(3, 5, figsize=(15, 12),
+                                 subplot_kw={'xticks': (), 'yticks': ()})
+
+        for i, (component, ax) in enumerate(zip(pca.components_, 
+                                                 axes.ravel())):
+            ax.imshow(component.reshape(image_shape),
+                   cmap='viridis')
+            ax.set_title("{}. component".format((i + 1)))
+
+\end{lstlisting} 
+
+
+
+	
+Aunque ciertamente no podemos entender todos los aspectos de estas componentes,  podemos suponer cuales aspectos de las imágenes faciales son capturando por algunas de las componentes.  La primera componente  parece codificar principalmente el contraste entre la cara y el fondo, la segunda componente codifica las diferencias en la iluminación entre la derecha y la mitad izquierda de la cara, y así sucesivamente.
+Aunque esta representación es un poco más semántica que los valores de píxeles sin procesar, todavía está muy  lejos de cómo un humano podría percibir una cara.  Como el modelo PCA se basa en píxeles, la alineación de la cara (la posición de los ojos, barbilla y nariz) y la iluminación tiene una fuerte influencia en la similitud de dos imágenes en su representación de píxeles.  Pero la alineación y la iluminación no son probablemente lo que un humano percibiría primero.   Cuando se le pide a la gente que califique la similitud de las caras, es más probable que utilicen atributos como la edad, el género, la expresión facial y el estilo del cabello, que son atributos difíciles de inferir por las intensidades de píxeles.
+
+
+Es importante tener en cuenta que los algoritmos a menudo interpretan datos (particularmente datos visuales, como imágenes, con las cuales los humanos están muy familiarizados) de manera muy diferente a como un humano haría.\\
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.84]{../Imagen_Machine/PrimerPar}
+	\caption{Vectores de componentes de las primeras 15 componentes principales de la data de caras}
+	\label{PrimerPar}
+\end{figure}
+
+Volvamos al caso específico de PCA, aunque, introdujimos la transformación de PCA como rotanción   
+de la data y luego dejando fuera las  componentes con baja varianza. Otra interpretación útil es tratar   de encontrar algunos números (los nuevos valores de característica después de la rotación PCA) para  que podamos expresar los puntos de prueba como una suma ponderada de las componentes principales 
+(véase la Figura \ref{SumaX3}).\\
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.60]{../Imagen_Machine/SumaX3}
+	\caption{Esquema del PCA como descomposición de una imagen en una suma ponderada de componentes}
+	\label{SumaX3}
+\end{figure}
+
+
+Aquí, $x_{0}$,  $x_{1}$,  y así sucesivamente son los coeficientes de las componentes principales 
+para esta data de puntos; en otras palabras, ellas son la representación de la imagen en el 
+espacio rotado.\\
+
+
+Otra forma para tratar de entender lo que un modelo de PCA está haciendo, es observar  las
+reconstrucciones de la data original usando sólo algunos componentes.   
+En la Figura \ref{CompontPric},  después de dejar fuera la segunda componente y llegar al tercer gráfico, deshacemos la rotación y añadimos la media  para obtener los nuevos puntos en el espacio original con la segunda  componente eliminada, como se muestra en el último gráfico. 
+
+Podemos hacer una transformación similar para las caras, reduciendo los datos a sólo algunas componentes principales y luego  girando de nuevo en el espacio original. Este retorno al espacio de características 
+original se puede hacer utilizando el método {\ttfamily inverse\_transform}.  Aquí, visualizamos la
+reconstrucción de algunas caras usando 10, 50, 100, 500, ó 2000 componentes (Figura \ref{Reconstruc}):
+
+
+\begin{lstlisting}  % [frame=single]	
+
+In[32]: mglearn.plots.plot_pca_faces(X_train, X_test, image_shape)
+
+\end{lstlisting} 
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.80]{../Imagen_Machine/Reconstruc}
+	\caption{Reconstrucción de tres imágenes faciales utilizando un incremento del número  de componentes principales}
+	\label{Reconstruc}
+\end{figure}
+
+
+
+Se puede ver que al utilizar  sólo las primeras 10 componentes principales, sólo la esencia de la imagen, como la orientación de la cara y la iluminación, se captura. Mediante el uso de más componentes principales, se capturan más detalles de la imagen. Esto corresponde al  incremento  de la sumatoria  de la figura \ref{SumaX3} para incluir más  términos. Usar tantas componentes como píxeles haya, significaría que no descartaríamos ninguna información después de la rotación, y reconstruiríamos la imagen perfectamente.\\ 
+
+También podemos tratar de utilizar PCA para visualizar todas las caras del conjunto de datos en un diagrama de dispersión usando los dos primeros componentes principales (Figura \ref{Scatter2}), con clases dadas por quién se muestra en la imagen, de manera similar a lo que hicimos con la data cáncer:\\
+
+
+\begin{lstlisting} 
+
+In[33]: mglearn.discrete_scatter(X_train_pca[:, 0], X_train_pca[:, 1], y_train)
+        plt.xlabel("First principal component")
+        plt.ylabel("Second principal component")
+
+\end{lstlisting} 
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.55]{../Imagen_Machine/Scatter2}
+	\caption{Diagrama de dispersión del conjunto de datos de caras utilizando las dos primeras componentes principales (véase la figura \ref{Com2Pric} para la imagen correspondiente a la data de cáncer)}
+	\label{Scatter2}
+\end{figure}
+
+
+Como se puede ver, cuando utilizamos sólo las dos primeras componentes principales de la totalidad de los datos es sólo una gran mancha, sin separación de clases visibles. Esto no es muy sorprendente, dado que incluso con 10 componentes, como se muestra en la Figura \ref{Reconstruc}, el PCA sólo captura las características muy toscas o bruscas de las caras.
+
+
+
+\vspace{-2cm}	
+\hspace{-1cm}
+{\fcolorbox{red}{white}{ 		
+		\begin{minipage}[16cm]{13.5cm}    %   centrado, largo y ancho                {14cm} 
+			\vspace{0.4cm}	
+			
+			
+			\begin{center}
+				{\bf{Eigenface}}
+			\end{center}	
+			
+			Un Eigenface (Wikipedia) es el nombre dado a un conjunto de vectores propios \index{vectores propios|seealso{eigenface}} cuando se utiliza en la visión por ordenador problema de humano de reconocimiento facial . [1] El enfoque de usar caras propias para el reconocimiento fue desarrollado por Sirovich y Kirby (1987) y utilizado por Matthew Turk y Alex Pentland en la clasificación de rostros. [2] Los vectores propios se derivan de la matriz de covarianza de la distribución de probabilidadsobre el espacio vectorial de alta dimensión de imágenes faciales. Las propias caras propias forman un conjunto base de todas las imágenes utilizadas para construir la matriz de covarianza. Esto produce una reducción de dimensión al permitir que el conjunto más pequeño de imágenes base represente las imágenes de entrenamiento originales. La clasificación se puede lograr comparando cómo las caras están representadas por el 
+			conjunto base.	 \\		
+			
+		\end{minipage} 		
+}}  \\
+
+
+
+\subsection{Factorización matricial no negativa (NMF)} 
+
+
+La factorización matricial no negativa es otro algoritmo de aprendizaje no supervisado que pretende
+ extraer características útiles. Funciona de manera similar a PCA y también puede ser utilizado para la reducción de dimensionalidad. Como en PCA,  tratamos de escribir cada punto de datos como una suma ponderada de algunos componentes, como se ilustra en la Figura \ref{SumaX3}.   Pero mientras en PCA se quiere que las componentes sean ortogonales y que expliquen la mayor variación posible de los datos, en el NMF, se quiere que las componentes y los coeficientes no sean no negativos; es decir, queremos que tanto los componentes como los coeficientes sean mayores o iguales a cero. Por consiguiente, este método sólo puede aplicarse a datos en  que todas las característica son  no  negativa, ya que una suma no negativa de componentes no negativos no puede convertirse en no negativa. \\
+
+
+
+El proceso de descomponer la data  en una suma ponderada no negativa es particularmente útil para los 
+datos que se crean como la adición (o superposición de capas) de varias fuentes independientes, como una pista de audio de varias personas hablando, o música con muchos instrumentos. 
+
+En estas situaciones, el NMF puede identificar los componentes originales que hacen la combinación de los datos. En general, el NMF da lugar a componentes más interpretables que el PCA, ya que los componentes y coeficientes negativos pueden provocar efectos de cancelación difíciles de interpretar.\\
+
+Los caracteres o caras  propias  (eigenfaces\index{caras  propias}) en la Figura \ref{PrimerPar}, por ejemplo, contienen partes positivas y negativas, y como hemos mencionado en la descripción de PCA, el signo es en realidad arbitrario. Antes de aplicar NMF a la data de cara, vamos a revisar brevemente los datos sintéticos.
+
+
+\subsubsection{Aplicar NMF a la data sintética}
+
+
+A diferencia de lo que ocurre cuando se usa PCA, necesitamos  asegurar que la data sean  positivos para que el NMF tenga capacidad de funcionar con los datos. Esto significa que dónde se encuentran los datos en relación con el origen (0, 0) es realmente importante para NMF.  
+
+Por lo tanto,  puede pensar en los componentes no negativos que se extraen como direcciones de (0, 0) hacia los datos. El siguiente ejemplo (Figura \ref{NMF1}) muestra los resultados del NMF en la data bidimensional de Toy:
+
+\begin{lstlisting}  	
+ 
+In[34]: mglearn.plots.plot_nmf_illustration()
+ 
+\end{lstlisting} 
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.55]{../Imagen_Machine/NMF1}
+	\caption{Componentes encontrados por la factorización matricial no negativa con dos componentes (izquierda) y una componente (derecha)}
+	\label{NMF1}
+\end{figure}
+
+
+Para la  NMF con dos componentes, como se muestra a la izquierda de la figura \ref{NMF1}, está claro que todos los puntos en la data se pueden escribir como una combinación positiva de las dos componentes. Si hay
+suficientes componentes para reconstruir perfectamente los datos (tantos componentes como  características haya), el algoritmo elegirá direcciones que apunten hacia los extremos de los datos.\\
+
+
+Si sólo usamos una única  componente, la NMF crea una componente que apunta hacia la media, ya que apuntar en esa dirección explica mejor la data.  Puedes ver que en contraste con PCA, reducir el número de componentes no sólo elimina algunas direcciones, sino que crea ¡Un conjunto de componentes completamente diferente!  Las componentes en NMF tampoco están ordenadas de manera específica, por lo que no hay una  "{}primer componente no negativa{}":  todas  las componentes juegan por igual.  \\
+
+
+
+NMF utiliza una inicialización aleatoria, lo que puede conducir a resultados diferentes
+ dependiendo de  la semilla aleatoria.  En casos relativamente simples, como los datos sintéticos
+  con dos componentes, donde toda la data pueden ser explicarse perfectamente, la aleatoriedad tiene poco efecto (aunque podría cambiar el orden o la escala de los componentes). En situaciones más complejas, puede haber cambios  drásticos.
+
+
+\subsubsection{Aplicando NMF a imágenes de caras}
+
+
+Ahora, aplicamos  NMF   a las  caras ctiquetadas  de data  Wild,   que usamos antes. El parámetro principal de NMF es el número de componentes a extraer. Por lo general, esto es menor que el número de características de entrada (de lo contrario, los datos podrían explicar cada píxel un componente separado).\\ 
+
+Primero, inspeccionemos cómo el número de componentes impacta  y qué tan bien los datos pueden ser reconstruidos usando NMF (Figura \ref{NMF2}):
+
+
+\begin{lstlisting} 
+
+In[35]: mglearn.plots.plot_nmf_faces(X_train, X_test, image_shape)
+
+\end{lstlisting} 
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.81]{../Imagen_Machine/NMF2}
+	\caption{Reconstrucción de tres imágenes faciales utilizando un número creciente de componentes encontrados por NMF}
+	\label{NMF2}
+\end{figure}
+
+
+Nuevamente la calidad de los datos transformados es similar al método  PCA, pero ligeramente 
+baja la calidad. Esto es lo  esperado, ya que PCA encuentra las direcciones óptimas en términos de reconstrucción. Mientras que  NMF  no lo utiliza por su capacidad para reconstruir o codificar datos, sino para encontrar patrones interesantes dentro de los datos.
+
+Como una primera vista   a los datos, intentemos extraer sólo unos pocos componentes (por ejemplo, 15).
+La Figura \ref{NMF3} muestra el resultado:
+
+\begin{lstlisting} 
+
+In[36]: from sklearn.decomposition import NMF
+        nmf = NMF(n_components=15, random_state=0)
+        nmf.fit(X_train)
+        X_train_nmf = nmf.transform(X_train)
+        X_test_nmf = nmf.transform(X_test)
+   
+        fix, axes = plt.subplots(3, 5, figsize=(15, 12),
+                                  subplot_kw={'xticks': (), 'yticks': ()})
+                            
+        for i, (component, ax) in enumerate(zip(nmf.components_, 
+                                                 axes.ravel())):
+            ax.imshow(component.reshape(image_shape))
+            ax.set_title("{}. component".format(i))
+
+\end{lstlisting} 
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.80]{../Imagen_Machine/NMF3}
+	\caption{Las componentes encontrados por NMF en la data de caras al usar 15 componentes}
+	\label{NMF3}
+\end{figure}
+
+
+Estas componentes son todas positivas, y así se asemejan a prototipos de caras mucho más que las componentes mostrados para PCA en la Figura \ref{PrimerPar}. Por ejemplo, se puede ver claramente que la componente 3 muestra una cara rotada un poco hacia la derecha, mientras que el componente 7 muestra una cara rotada un poco hacia la izquierda. Veamos las imágenes para las que estos componentes son particularmente fuertes, mostradas en las Figuras \ref{NMF4} y \ref{NMF5}:
+
+\begin{lstlisting} 
+
+In[37]: compn = 3
+        # sort by 3rd component, plot first 10 images
+        inds = np.argsort(X_train_nmf[:, compn])[::-1]
+        fig, axes = plt.subplots(2, 5, figsize=(15, 8),
+                                 subplot_kw={'xticks': (), 'yticks': ()})
+        for i, (ind, ax) in enumerate(zip(inds, axes.ravel())):
+            ax.imshow(X_train[ind].reshape(image_shape))
+
+        compn = 7
+        # sort by 7th component, plot first 10 images
+        inds = np.argsort(X_train_nmf[:, compn])[::-1]
+        fig, axes = plt.subplots(2, 5, figsize=(15, 8),
+                                 subplot_kw={'xticks': (), 'yticks': ()})
+        for i, (ind, ax) in enumerate(zip(inds, axes.ravel())):
+            ax.imshow(X_train[ind].reshape(image_shape))
+
+
+\end{lstlisting} 
+
+%  np.argsor:   elemento más pequeño está en el índice 2, el siguiente más pequeño
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.62]{../Imagen_Machine/NMF4}
+	\caption{Caras que tienen un alto coeficiente para el componente 3}
+	\label{NMF4}
+\end{figure}
+
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.62]{../Imagen_Machine/NMF5}
+	\caption{Caras que tienen un alto coeficiente para el componente 7}
+	\label{NMF5}
+\end{figure}
+
+
+
+
+Como era de esperar, las caras que tienen un alto coeficiente para la componente 3 son caras que miran a la derecha (Figura \ref{NMF4}), mientras que las caras con un alto coeficiente para la componente 7 miran a la izquierda (Figura \ref{NMF5}). Como se mencionó anteriormente, la extracción de patrones como estos, funciona mejor para los datos con estructura aditiva, incluyendo audio, expresión génica\footnote{\scriptsize	{Expresión génica es el proceso mediante el cual la información codificada en un gen se utiliza para dirigir el montaje de una molécula de proteína. La célula lee la secuencia del gen en grupos de tres bases. Cada uno de estos grupos de tres bases (codón) corresponde a uno de los 20 aminoácidos diferentes usados para construir las proteínas.}}, y datos de texto. Veamos un ejemplo de datos sintéticos para ver cómo podría verse esto. \\
+
+Digamos que estamos interesados en una señal que es una combinación de tres fuentes diferentes (Figura \ref{OriginalSenal}):
+
+
+\begin{lstlisting} 
+
+In[38]: S = mglearn.datasets.make_signals()
+        plt.figure(figsize=(6, 1))
+        plt.plot(S, '-')
+        plt.xlabel("Time")
+        plt.ylabel("Signal")
+
+\end{lstlisting} 
+
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.50]{../Imagen_Machine/OriginalSenal}
+	\caption{Fuentes de señales originales}
+	\label{OriginalSenal}
+\end{figure}
+
+%  OriginalSenal
+
+
+Lamentablemente, no podemos observar las señales originales,  sólo una mezcla aditiva de
+las tres. Queremos recuperar la descomposición de la señal mixta en las Componentes originales. Asumimos  que hay muchas formas diferentes de observar la mezcla (digamos 100 dispositivos de medición), cada uno de los cuales nos proporciona una serie de mediciones:\\
+
+
+\begin{lstlisting}  
+
+In[39]: # mix data into a 100-dimensional state
+        A = np.random.RandomState(0).uniform(size=(100, 3))
+        X = np.dot(S, A.T)
+       print("Shape of measurements: {}".format(X.shape))
+
+Out[39]:
+    
+    Shape of measurements: (2000, 100)
+
+\end{lstlisting} 
+
+
+Podemos usar NMF para recuperar las tres señales:
+
+
+\begin{lstlisting}  
+
+In[40]: nmf = NMF(n_components=3, random_state=42)
+        S_ = nmf.fit_transform(X)
+        print("Recovered signal shape: {}".format(S_.shape))
+
+Out[40]:
+
+    Recovered signal shape: (2000, 3)
+    
+\end{lstlisting} 
+
+
+A modo de comparación, también aplicamos PCA:\\
+
+\begin{lstlisting} 
+
+In[41]: pca = PCA(n_components=3)
+        H = pca.fit_transform(X)
+	
+\end{lstlisting} 
+
+
+En la Figura \ref{NMFyCOMP} se muestra la actividad de la señal descubierta por NMF y PCA:\\
+
+\begin{lstlisting}  
+
+In[42]: models = [X, S, S_, H]
+        names = ['Observations (first three measurements)',
+                 'True sources',
+                 'NMF recovered signals',
+                 'PCA recovered signals']
+            
+        fig, axes = plt.subplots(4, figsize=(8, 4), 
+                                 gridspec_kw={'hspace': .5},
+                                 subplot_kw={'xticks': (), 'yticks': ()})
+                            
+        for model, name, ax in zip(models, names, axes):
+            ax.set_title(name)
+            ax.plot(model[:, :3], '-')
+
+\end{lstlisting} 
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.50]{../Imagen_Machine/NMFyCOMP}
+	\caption{Recuperando fuentes mixtas usando NMF y PCA}
+	\label{NMFyCOMP}
+\end{figure}
+
+
+
+La figura incluye 3 de las 100 mediciones de X como referencia. Como puedes ver,
+NMF hizo un trabajo razonable al descubrir las fuentes originales, mientras que PCA falló y
+usó la primera componente para explicar la mayoría de la variación en los datos.
+
+ Es importante tener en cuenta que las componentes producidos por NMF no tienen un orden natural; en este ejemplo, el orden de las componentes de NMF es el mismo que en la señal original (vea el sombreado de las tres curvas), pero esto es puramente accidental.
+
+
+Hay muchos otros algoritmos que pueden usarse para descomponer cada punto de la data en
+una suma ponderada basasa en un conjunto fijo de componentes, como lo hacen PCA y NMF.  Analizar más algoritmos de este tipo están más allá del alcance de este libro;  además, las restricciones impuestas a
+componentes y coeficientes generalmente involucra  la teoría de la probabilidad.  Pero si Usted está interesado en este tipo de extracción de patrones, le recomendamos revisar las secciones en la guía del usuario de {\ttfamily scikit\_learn} sobre análisis de componentes independientes (ICA), análisis factorial (FA) y  codificación sparse (diccionario de aprendizaje), generalmente en esta página puede encontrar casi todo lo referente a  \href{https://scikit-learn.org/stable/modules/decomposition.html}{\color{vino} métodos de descomposición}.  
+
+
+\subsection{Aprendizaje múltiple con t-SNE}
+
+
+Mientras que el PCA es con frecuencia  la  primera aproximación  buena  de la transformación de los  datos para visualizarlo usando un diagrama de dispersión, la naturaleza del método (aplicando 
+rotación y luego descartando direcciones) límita su utilidad, como vimos con el gráfico de dispersión
+de las caras etiquetadas en la data Wild.
+
+Hay una clase de algoritmos para visualización llamado  algoritmos de múltiple aprendizaje (manifold learning algorithms)  que permiten mapeos mucho más complejos,  y a menudo proporciona mejor visualización. Uno de estos algoritmos  particularmente muy útil es el  algoritmo llamado   incrustación de vecinos estocásticos distribuidos en t, mejor conocido como t-SNE (t-distributed stochastic neighbor embedding).
+
+%  incrustación de vecinos estocásticos distribuidos (t-SNE)  incrustación del vecino estocástica con distribuición t
+
+Los algoritmos de aprendizaje múltiple están dirigidos principalmente a la visualización, por lo que rara vez se emplean para generar más de dos  nuevas características. Algunos de ellos, incluido t-SNE, 
+cálculan una nueva representación de los datos de entrenamiento, pero no permiten transformaciones de nuevos
+datos. Esto significa que estos algoritmos no se pueden aplicar a un conjunto de prueba;  
+más bien, sólo pueden transformar los datos para los que fueron entrenados.  El aprendizaje múltiple puede ser útil para el análisis exploratorio de datos, pero rara vez se utiliza cuando el objetivo final es el aprendizaje supervisado. La idea detrás de t-SNE es encontrar una representación bidimensional de los datos que preservan las distancias entre los puntos lo mejor posible. 
+ 
+t-SNE comienza con una representación bidimensional aleatoria para cada punto de la data, y luego trata de tomar los puntos que están más cerca, y los  que están más lejos en el espacio de característica original.  t-SNE pone más énfasis en los puntos cercanos, en lugar de preservar distancias entre puntos distantes. En otras palabras, trata de preservar la información que indica qué puntos son vecinos entre sí.\\
+
+
+Aplicaremos  el  algoritmo  múltiple  de  aprendizaje t-SNE en la  dataset de dígitos escritos 
+a mano (manuscrita) incluida en  {\ttfamily scikit-learn}. Cada punto de esta  dataset
+es una imagen de 8x8 a escala de grises de un dígito escrito a mano entre 0 y 9.
+ 
+  La Figura \ref{EscritoMano}  muestra una imagen del ejemplo  para cada clase:\\
+
+
+
+
+\begin{lstlisting}  % [frame=single]	
+
+In[43]: from sklearn.datasets import load_digits
+        digits = load_digits()
+   
+        fig, axes = plt.subplots(2, 5, figsize=(10, 5),
+                                subplot_kw={'xticks':(), 'yticks': ()})
+        for ax, img in zip(axes.ravel(), digits.images):
+            ax.imshow(img)
+
+
+\end{lstlisting} 
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.50]{../Imagen_Machine/EscritoMano}
+	\caption{Ejemplo de imágenes de la data  de dígitos}
+	\label{EscritoMano}
+\end{figure}
+
+
+
+Usemos PCA para visualizar los datos reducidos a dos dimensiones. Graficamos las dos primeras
+componentes principales, y colorea cada punto por su clase (ver Figura \ref{Scatter3}):
+
+
+
+
+\begin{lstlisting}  % [frame=single]	
+
+
+In[44]: # build a PCA model
+        pca = PCA(n_components=2)
+        pca.fit(digits.data)
+        # transform the digits data onto the first two principal components
+        digits_pca = pca.transform(digits.data)
+        colors = ["#476A2A", "#7851B8", "#BD3430", "#4A2D4E", "#875525",
+                  "#A83683", "#4E655E", "#853541", "#3A3120", "#535D8E"]
+        plt.figure(figsize=(10, 10))
+        plt.xlim(digits_pca[:, 0].min(), digits_pca[:, 0].max())
+        plt.ylim(digits_pca[:, 1].min(), digits_pca[:, 1].max())
+        for i in range(len(digits.data)):
+            # actually plot the digits as text instead of using scatter
+            plt.text(digits_pca[i, 0], digits_pca[i, 1], 
+                     str(digits.target[i]), color = colors[digits.target[i]],
+                     fontdict={'weight': 'bold', 'size': 9})
+        plt.xlabel("First principal component")
+        plt.ylabel("Second principal component")
+
+
+\end{lstlisting} 
+
+
+Aquí, en realidad usamos las verdaderas clases de dígitos como glifos\footnote{\scriptsize	{glifo es atribuido a formas de escritura de las civilizaciones antiguas como los olmecas, mayas, xochilcas, aztecas, egipcios, entre otros}.}, para mostrar a qué clase pertenece. Los dígitos cero, seis, y cuatro están relativamente bien separados usando las dos primeras componentes principales, aunque todavía se superponen (solapan). La mayoría de los otros dígitos se superponen significativamente.
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.75]{../Imagen_Machine/Scatter3}
+	\caption{Diagrama de dispersión del conjunto de datos de dígitos usando las dos primeras componentes principales}
+	\label{Scatter3}
+\end{figure}
+
+
+Apliquemos t-SNE a la misma data y comparemos los resultados. Como t-SNE no admite la transformación de nuevos datos, la clase TSNE no tiene ningún método de transformación. En su lugar, podemos llamar al método  {\ttfamily fit\_transform}, que construirá el modelo y devolverá inmediatamente los datos transformados (ver Figura \ref{EscritoMano2}):\\
+
+
+
+\begin{lstlisting}  % [frame=single]	
+
+In[45]: from sklearn.manifold import TSNE
+        tsne = TSNE(random_state=42)
+        # use fit_transform instead of fit, as TSNE has no transform method
+        digits_tsne = tsne.fit_transform(digits.data)
+
+In[46]: plt.figure(figsize=(10, 10))
+        plt.xlim(digits_tsne[:, 0].min(), digits_tsne[:, 0].max() + 1)
+        plt.ylim(digits_tsne[:, 1].min(), digits_tsne[:, 1].max() + 1)
+   
+        for i in range(len(digits.data)):
+            # actually plot the digits as text instead of using scatter
+            plt.text(digits_tsne[i, 0], digits_tsne[i, 1], str(digits.target[i]),
+                     color = colors[digits.target[i]],
+                     fontdict={'weight': 'bold', 'size': 9})
+        plt.xlabel("t-SNE feature 0")
+        plt.xlabel("t-SNE feature 1")
+
+\end{lstlisting} 
+
+
+
+\begin{figure}[h!]                       
+	\centering
+	\includegraphics[scale=0.75]{../Imagen_Machine/EscritoMano2}
+	\caption{Diagrama de dispersión del conjunto de datos de dígitos usando dos componentes encontrados por t-SNE}
+	\label{EscritoMano2}
+\end{figure}
+
+
+El resultado de t-SNE es bastante notable. Todas las clases están claramente separadas.
+Los unos y los nueve están algo divididos, pero la mayoría de las clases forman un sólo 
+grupo denso.   Tenga en cuenta que este método no tiene conocimiento de las etiquetas de clase: es 
+ no supervisado completamente. Aún así, puede encontrar una representación de los datos en dos dimensiones
+que separa claramente las clases, basándose únicamente en qué tan cercanos están los puntos en el
+espacio  original.
+
+El algoritmo t-SNE tiene algunos parámetros de ajuste, aunque a menudo funciona bien con
+la configuración predeterminada. Puedes intentar jugar con  {\ttfamily perplejidad} y {\ttfamily early\_exaggeration}, pero los efectos suelen ser menores.
+
+\section{Clustering o Agrupación}
+
+
+
+Como describimos anteriormente, la tarea del  clustering de dividir la dataset en grupos,
+estos son llamados clústers, grupos o conglomerados.  El objetivo del  clustering  es dividir los datos de tal manera que los puntos dentro de un  grupo sean muy similares y los puntos entre grupos sean  muy diferentes.  De manera similar a los algoritmos de clasificación, estos  algoritmos  asignan (o predicen) un número a cada dato, que indica a qué grupo pertenece ese punto en particular.
+
+
+
+
+\subsection{Agrupación de k-medias (k-Means Clustering)}
+
+La agrupación de k-means es uno de los algoritmos de agrupación más simples y más utilizados.
+ Intenta encontrar centros de clúster que sean representativos de ciertas regiones de la
+data.  El algoritmo alterna entre dos pasos: asignar cada punto de la data al
+centro de clúster más cercano y luego establece cada centro de clúster como la media de los 
+puntos de datos  asignados. El algoritmo finaliza cuando la asignación de
+las instancias a clústeres ya no cambian.
+
+ El siguiente ejemplo (Figura \ref{k-media2}) illustra el algoritmo sobre la data sintética:\\
+
+ 
+
+\begin{lstlisting}  % [frame=single]
+
+In[47]: mglearn.plots.plot_kmeans_algorithm()
+   
+\end{lstlisting} 
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.84]{../Imagen_Machine/k-media2}
+	\caption{Datos de entrada y tres pasos del algoritmo k-means}
+	\label{k-media2}
+\end{figure}
+
+
+
+Los centros de clúster se muestran como triángulos, mientras que los puntos de la data se muestran como círculos.  Los colores indican la etiqueta o membresía del clúster. Se configuró para buscar tres grupos, así que el algoritmo se inicializó declarando tres puntos de datos aleatoriamente como centro de clúster (ver "{}Inicialización"). Entonces comienza el algoritmo iterativo.  Primero, cada punto de datos es asignado al centro de clúster más cercano (consulte “Asignar puntos (1){}”).  Luego, el centro del clúster se actualizan para que sean la media de los puntos asignados (consulte "{}Centros de recálculo (1){}").  Luego, el proceso se repite dos veces más.  Después de la tercera iteración, la asignación de puntos a los centros de clúster se mantuvo sin cambios, por lo que el algoritmo se detiene.
+
+
+Dados los nuevos puntos de datos, k-means asignará cada uno al centro de clúster más cercano. El siguiente
+ ejemplo (Figura \ref{CentroKMedia}) muestra los límites de los centros de agrupación que se aprendieron
+en la figura \ref{k-media2}:\\
+
+\begin{lstlisting}  % [frame=single]	
+
+In[48]: mglearn.plots.plot_kmeans_boundaries()
+
+\end{lstlisting}
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.50]{../Imagen_Machine/CentroKMedia}
+	\caption{Centros de clúster y límites de clúster encontrados por el algoritmo k-means}
+	\label{CentroKMedia}
+\end{figure}
+
+
+
+ La aplicación de k-means con {\ttfamily scikit-learn} es bastante sencilla. Aquí, lo aplicamos 
+ a la data  sintética utilizada en  gráficos anteriores.  Instanciamos la clase {\ttfamily KMeans}, y se configura  el número de clúster que nos interesa. Y llamamos el método {\ttfamily fit} sobre la data:\\
+
+\begin{lstlisting}  % [frame=single]	
+
+In[49]: from sklearn.datasets import make_blobs
+        from sklearn.cluster import KMeans
+   
+        # generate synthetic two-dimensional data
+        X, y = make_blobs(random_state=1)
+   
+        # build the clustering model
+        kmeans = KMeans(n_clusters=3)
+        kmeans.fit(X)
+
+\end{lstlisting} 
+
+
+El algoritmo le asigna  a cada punto del conjunto de entrenamiento en X  una etiqueta de cluster. Las  etiquetas se pueden encontrar en el atributo {\ttfamily kmeans.labels\_}:
+
+
+
+
+\begin{lstlisting}  % [frame=single]	
+
+In[50]: print("Cluster memberships:\n{}".format(kmeans.labels_))
+
+Out[50]:
+
+    Cluster memberships:
+    [1 2 2 2 0 0 0 2 1 1 2 2 0 1 0 0 0 1 2 2 0 2 0 1 2 0 0 1 1 0 1 1 0 1 2 0 
+     2 2 2 0 0 2 1 2 2 0 1 1 1 1 2 0 0 0 1 0 2 2 1 1 2 0 0 2 2 0 1 0 1 2 2 2 
+     0 1 1 2 0 0 1 2 1 2 2 0 1 1 1 1 2 1 0 1 1 2 2 0 0 1 0 1]
+
+\end{lstlisting}  % [frame=single]	
+
+
+
+Como se configuro con tres clusters, estos  están numerados  como  0, 1  y  2. \\
+
+También se le pueden asignar etiquetas de cluster a nuevos puntos, usando el método de {\ttfamily predict}. Cada nuevo punto es asignado al centro del clúster más cercano, pero el modelo existente no  cambia. Correr una {\ttfamily  predict} (predecición)   sobre la data de entrenamiento devuelve el mismo resultado que {\ttfamily labels\_}:
+
+
+\begin{lstlisting}  % [frame=single]	
+
+
+In[51]: print(kmeans.predict(X))
+
+Out[51]:
+
+    [1 2 2 2 0 0 0 2 1 1 2 2 0 1 0 0 0 1 2 2 0 2 0 1 2 0 0 1 1 0 1 1 0 1 2 0 
+     2 2 2 0 0 2 1 2 2 0 1 1 1 1 2 0 0 0 1 0 2 2 1 1 2 0 0 2 2 0 1 0 1 2 2 2  
+     0 1 1 2 0 0 1 2 1 2 2 0 1 1 1 1 2 1 0 1 1 2 2 0 0 1 0 1]
+
+\end{lstlisting}  % [frame=single]	
+
+Se puede ver que el clustering es algo similar a la clasificación, en  que cada item  obtiene
+una etiqueta. Sin embargo, no existe una verdad fundamental,  y  en consecuencia, las etiquetas mismas
+no tienen un significado a priori.   Volvamos al ejemplo de  clustering   con  las imágenes caras (faciales) que discutimos antes. Puede ser que el clúster 3 encontrado por el algoritmo contenga
+sólo rostros (caras)  de la joven Bela. Aunque,  Usted sólo puedes saber  después de ver las fotos,   y además  el número 3 es arbitrario.  La única información que le brinda el algoritmo es que todas las caras etiquetadas como 3 son similares.\\
+
+
+Para el agrupamiento que se calculó sobre la data bidimensional Toy, que significa que no debemos asignar ninguna importancia al hecho de que un grupo fue etiquetado 0 y otro fue etiquetado 1. Si corremos el algoritmo otra vez, podrían resultar en una numeración diferente para los grupos debido a la naturaleza aleatoria de la inicialización. En la  Figura \ref{Kmedia3clust} se presenta nuevamente estos datos en una  gráfica, los mismos grupos con etiquetas deferentes.
+
+
+Los centros de clúster se almacenan en el atributo {\ttfamily cluster\_centers\_}, y en el  gráfico se muestran como triángulos:
+
+
+\begin{lstlisting}  % [frame=single]	
+
+In[52]: mglearn.discrete_scatter(X[:, 0], X[:, 1], kmeans.labels_,
+                                  markers='o')
+        mglearn.discrete_scatter(kmeans.cluster_centers_[:, 0],
+                                 kmeans.cluster_centers_[:, 1], 
+                                 [0, 1, 2], markers='^', markeredgewidth=2)
+
+
+\end{lstlisting} 
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.50]{../Imagen_Machine/Kmedia3clust}
+	\caption{Asignaciones de clúster y centros de clúster encontrados por k-means con tres clusters}
+	\label{Kmedia3clust}
+\end{figure}
+
+
+También podemos utilizar más o menos centros de cluster (Figura \ref{4kmedia}):
+
+
+\begin{lstlisting}  % [frame=single]	
+
+In[53]: fig, axes = plt.subplots(1, 2, figsize=(10, 5))
+   
+        # using two cluster centers:
+        kmeans = KMeans(n_clusters=2)
+        kmeans.fit(X)
+        assignments = kmeans.labels_
+   
+        mglearn.discrete_scatter(X[:, 0], X[:, 1], assignments, ax=axes[0])
+   
+        # using five cluster centers:
+        kmeans = KMeans(n_clusters=5)
+        kmeans.fit(X)
+        assignments = kmeans.labels_
+   
+        mglearn.discrete_scatter(X[:, 0], X[:, 1], assignments, ax=axes[1])
+
+
+\end{lstlisting} 
+
+%   conglomerados     grupos     clúster 
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.50]{../Imagen_Machine/4kmedia}
+	\caption{Asignaciones de clúster  por k-means, dos  (en la izquierda) y cinco  (en la derecha)}
+	\label{4kmedia}
+\end{figure}
+
+
+\subsubsection{Casos en que  falla de k-means}
+
+ Incluso si conoce el número "{}correcto"{} de clusters para una dataset dada, k-means podría no siempre ser capaz de recuperarlos. Cada cluster es definido solamente por su centro, lo que significa que cada cluster es una forma convexa. Como resultado de esto, k-means sólo pueden cubrir formas relativamente simples. k-means también asume que todos los clusters  tienen el mismo "{}diámetro"{ }   en algún sentido; estos  siempre dibujan el límite entre clusters exactamente en el medio entre los centros de cluster.
+ Esto puede llevar a veces a resultados sorprendentes, como se muestra en la Figura \ref{Sorprend}: 
+
+ 
+
+\begin{lstlisting}  % [frame=single]
+
+In[54]: X_varied, y_varied = make_blobs(n_samples=200,
+                                        cluster_std=[1.0, 2.5, 0.5],
+                                        random_state=170)
+       y_pred = KMeans(n_clusters=3, random_state=0).fit_predict(X_varied)
+  
+       mglearn.discrete_scatter(X_varied[:, 0], X_varied[:, 1], y_pred)
+       plt.legend(["cluster 0", "cluster 1", "cluster 2"], loc='best')
+       plt.xlabel("Feature 0")
+       plt.ylabel("Feature 1")
+	
+
+\end{lstlisting} 
+
+
+	
+	
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.50]{../Imagen_Machine/Sorprend}
+	\caption{Asignaciones de clúster encontradas por k-media cuando los clústers tienen densidades diferentes}
+	\label{Sorprend}
+\end{figure}
+
+
+Podríamos  esperar  que la región densa de la izquierda inferior fuera el primer grupo, la región densa de la derecha superior fuera la segunda, y la región menos densa del centro  fuera la tercera. En cambio, tanto el cluster 0 como el cluster 1 tienen algunos puntos que están muy lejos de todos los otros puntos de estos clusters que se {}"{}alcanzan"{}  hacia el centro.  k-means también asume que todas las direcciones son igualmente importantes para cada cluster.  
+
+
+El  gráfico (Figura \ref{KmediaFalla}) muestra el conjunto de datos bidimensionales donde hay tres partes claramente separadas en los datos. Sin embargo, estos grupos se estiran hacia la diagonal. Como k-means solo considera la distancia al centro del cluster más cercano, no puede manejar este tipo de datos: 
+
+ 
+
+\begin{lstlisting}  % [frame=single]	
+
+In[55]: # generate some random cluster data
+        X, y = make_blobs(random_state=170, n_samples=600)
+        rng = np.random.RandomState(74)
+  
+        # transform the data to be stretched
+        transformation = rng.normal(size=(2, 2))
+        X = np.dot(X, transformation)
+  
+        # cluster the data into three clusters
+        kmeans = KMeans(n_clusters=3)
+        kmeans.fit(X)
+        y_pred = kmeans.predict(X)
+   
+        # plot the cluster assignments and cluster centers
+        plt.scatter(X[:, 0], X[:, 1], c=y_pred, cmap=mglearn.cm3)
+        plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1],
+                    marker='^', c=[0, 1, 2], s=100, linewidth=2, cmap=mglearn.cm3)
+        plt.xlabel("Feature 0")
+        plt.ylabel("Feature 1")
+
+
+\end{lstlisting} 
+
+
+
+
+
+Otro ejemplo donde k-means también funciona mal, se presenta cuando los clusters tienen formas más complejas, como los datos de {\ttfamily two\_moons}  analizados en el Capítulo \ref{Cap2} (ver Figura \ref{KmediaFalla2}):
+
+
+\begin{lstlisting}  % [frame=single]	
+
+
+In[56]: # generate synthetic two_moons data (with less noise this time)
+        from sklearn.datasets import make_moons
+        X, y = make_moons(n_samples=200, noise=0.05, random_state=0)
+  
+        # cluster the data into two clusters
+        kmeans = KMeans(n_clusters=2)
+        kmeans.fit(X)
+        y_pred = kmeans.predict(X)
+  
+        # plot the cluster assignments and cluster centers
+        plt.scatter(X[:, 0], X[:, 1], c=y_pred, cmap=mglearn.cm2, s=60)
+        plt.scatter(kmeans.cluster_centers_[:, 0],
+                    kmeans.cluster_centers_[:, 1], 
+                    marker='^', c=[mglearn.cm2(0), mglearn.cm2(1)], 
+                    s=100, linewidth=2)
+        plt.xlabel("Feature 0")
+        plt.ylabel("Feature 1")
+
+
+\end{lstlisting}
+
+
+
+\begin{figure}[!h!tbp]
+	\begin{subfigure}[b]{0.5\textwidth}
+		\includegraphics[width=7cm, height=5cm]{../Imagen_Machine/KmediaFalla}
+		\caption{k-means no identifica los clústers \\no esféricos}
+		\label{KmediaFalla}
+		%	\caption{ }
+		%	\label{  }
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.5\textwidth}
+		\includegraphics[width=7cm, height=5cm]{../Imagen_Machine/KmediaFalla2}
+		\caption{k-means no identifica grupos con \\formas complejas}
+		\label{KmediaFalla2}
+	\end{subfigure}
+	\caption{k-means sólo considera la distancia al centro del cluster más cercano, no puede manejar estos tipos de datos}
+	%	\label{Grupo}
+\end{figure}
+
+
+
+ Aquí, podríamos esperar que el algoritmo de clustering pueda descubrir las dos formas de media luna. Sin embargo, esto no es posible usando el algoritmo k-means.
+
+
+
+
+
+
+\subsubsection{Cuantificación vectorial}
+
+ Ver el algoritmo  k-media como una  descomposición de la data es conocido como cuantificación vectorial{\footnote{\scriptsize{Cuantización vectorial, o ver k-medias como descomposición}}}.   A pesar de que k-media es un algoritmo de agrupamiento, hay paralelismos interesantes entre k-means y los métodos de descomposición como PCA y NMF que discutió antes. Puede recordar que PCA intenta encontrar direcciones de máxima varianza en los datos, mientras que NMF intenta encontrar componentes aditivos, que a menudo corresponden a  "{ }extremos{ }"{}  o  "{ }partes{ }"  { }de la data (ver Figura \ref{NMF1}).    Ambos métodos intentan expresar los puntos de la data como una suma de algunas componentes. Por otro lado, k-means intenta representar cada punto de la data  usando un centro de cluster.     Se podría considerar  que cada punto es representado por  una única componente, que en este caso sería dado por el centro del cluster. Esta visión de k-media es como un método de descomposición, donde cada punto se representa utilizando una sóla componente, es llamada cuantificación vectorial.
+
+
+Veamos una comparación lado por lado  (side-by-side)  con  PCA, NMF, y k-media, mostrando las 
+componentes  extraídas (Figura \ref{CompracionK1}), así como reconstrucciones de caras del conjunto de pruebas utilizando 100 componentes (Figura \ref{ComparacionK2}). Para k-means, la reconstrucción es el centro de cluster más cercano encontrado en el conjunto de entrenamiento: \\
+
+\begin{lstlisting}  
+
+In[57]: X_train, X_test, y_train, y_test = train_test_split(
+            X_people, y_people, stratify=y_people, random_state=0)
+        nmf = NMF(n_components=100, random_state=0)
+        nmf.fit(X_train)
+        pca = PCA(n_components=100, random_state=0)
+        pca.fit(X_train)
+        kmeans = KMeans(n_clusters=100, random_state=0)
+        kmeans.fit(X_train)
+
+        X_reconstructed_pca = pca.inverse_transform(pca.transform(X_test))
+        X_reconstructed_kmeans = kmeans.cluster_centers_[kmeans.predict(X_test)]
+        X_reconstructed_nmf = np.dot(nmf.transform(X_test), nmf.components_)
+
+In[58]: fig, axes = plt.subplots(3, 5, figsize=(8, 8),
+                                 subplot_kw={'xticks': (), 'yticks': ()})
+        fig.suptitle("Extracted Components")
+        for ax, comp_kmeans, comp_pca, comp_nmf in zip(
+                axes.T, kmeans.cluster_centers_, pca.components_, 
+                nmf.components_):
+            ax[0].imshow(comp_kmeans.reshape(image_shape))
+            ax[1].imshow(comp_pca.reshape(image_shape), cmap='viridis')
+            ax[2].imshow(comp_nmf.reshape(image_shape))
+      
+        axes[0, 0].set_ylabel("kmeans")
+        axes[1, 0].set_ylabel("pca")
+        axes[2, 0].set_ylabel("nmf")
+
+        fig, axes = plt.subplots(4, 5, 
+                                 subplot_kw={'xticks': (), 'yticks': ()},
+                                 figsize=(8, 8))
+        fig.suptitle("Reconstructions")
+        for ax, orig, rec_kmeans, rec_pca, rec_nmf in zip(
+                axes.T, X_test, X_reconstructed_kmeans, X_reconstructed_pca,
+                X_reconstructed_nmf):
+       
+            ax[0].imshow(orig.reshape(image_shape))
+            ax[1].imshow(rec_kmeans.reshape(image_shape))
+            ax[2].imshow(rec_pca.reshape(image_shape))
+            ax[3].imshow(rec_nmf.reshape(image_shape))
+   
+        axes[0, 0].set_ylabel("original")
+        axes[1, 0].set_ylabel("kmeans")
+        axes[2, 0].set_ylabel("pca")
+        axes[3, 0].set_ylabel("nmf")
+
+\end{lstlisting} 
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.90]{../Imagen_Machine/CompracionK1}
+	\caption{Comparación de los centros de conglomerados k-means con los componentes encontrados por PCA y NMF}
+	\label{CompracionK1}
+\end{figure}
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.95]{../Imagen_Machine/ComparacionK2}
+	\caption{Comparar reconstrucciones de imágenes usando k-means, PCA, y NMF con 100 componentes (ó centros de cluster: k-means usa  un centro de grupo por imagen)}
+	\label{ComparacionK2}
+\end{figure}
+
+componentes (o centros de grupos): k-means usa solo un centro de grupo por imagen
+
+Un aspecto interesante de la cuantificación vectorial usando k-medias es que podemos utilizar muchos más  clusters que dimensiones de entrada para codificar nuestros datos. 
+
+Volvamos a los datos de {\ttfamily two\_moons}. Usando PCA o NMF, no hay mucho que podamos hacer a estos datos, ya que vienen en sólo dos dimensiones. Reducirlo a una dimensión con PCA o NMF destruiría completamente la estructura de los datos. Pero podemos encontrar una representación más expresiva con k-medias, usando más centros de  clusters (vea la Figura \ref{UsandoK}):
+
+
+
+
+
+
+
+\begin{lstlisting}  % [frame=single]	
+
+In[59]: X, y = make_moons(n_samples=200, noise=0.05, random_state=0)
+   
+        kmeans = KMeans(n_clusters=10, random_state=0)
+        kmeans.fit(X)
+        y_pred = kmeans.predict(X)
+   
+        plt.scatter(X[:, 0], X[:, 1], c=y_pred, s=60, cmap='Paired')
+             plt.scatter(kmeans.cluster_centers_[:, 0], 
+                         kmeans.cluster_centers_[:, 1], s=60, marker='^', 
+                         c=range(kmeans.n_clusters), linewidth=2, cmap='Paired')
+        plt.xlabel("Feature 0")
+        plt.ylabel("Feature 1")
+        print("Cluster memberships:\n{}".format(y_pred))
+
+Out[59]:
+    
+   Cluster memberships:
+   [9 2 5 4 2 7 9 6 9 6 1 0 2 6 1 9 3 0 3 1 7 6 8 6 8 5 2 7 5 8 9 8 6 5 3 7 0
+    9 4 5 0 1 3 5 2 8 9 1 5 6 1 0 7 4 6 3 3 6 3 8 0 4 2 9 6 4 8 2 8 4 0 4 0 5
+    6 4 5 9 3 0 7 8 0 7 5 8 9 8 0 7 3 9 7 1 7 2 2 0 4 5 6 7 8 9 4 5 4 1 2 3 1
+    8 8 4 9 2 3 7 0 9 9 1 5 8 5 1 9 5 6 7 9 1 4 0 6 2 6 4 7 9 5 5 3 8 1 9 5 6
+    3 5 0 2 9 3 0 8 6 0 3 3 5 6 3 2 0 2 3 0 2 6 3 4 4 1 5 6 7 1 1 3 2 4 7 2 7
+    3 8 6 4 1 4 3 9 9 5 1 7 5 8 2]
+
+\end{lstlisting} 
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.65]{../Imagen_Machine/UsandoK}
+	\caption{Usando muchos clusters k-means para cubrir la variación en una data compleja}
+	\label{UsandoK}
+\end{figure}
+
+
+
+Usando 10 centros de  cluster, significa que a cada punto se le asigna un número
+entre 0 y 9. Podemos ver esto como si datos  se representaran usando 10 componentes
+(es decir, tenemos 10  nuevas características),  y  todas las demás características a  0, aparte de la que representa el centro del clúster al que está asignado el punto. Usando  esta  nueva representación con 10 dimensiones, ahora sería posible separar las dos formas de  media luna   utilizando un modelo lineal, que no hubiera sido posible utilizando las dos características originales.   También es posible obtener una representación aún más expresiva de los datos mediante el uso de 
+distancias a cada uno de los centros de clúster como características. Esto se puede lograr usando
+el método {\ttfamily transform} de {\ttfamily kmeans} :
+
+
+
+\begin{lstlisting}  % [frame=single]	
+
+
+
+In[60]: distance_features = kmeans.transform(X)
+        print("Distance feature shape: {}".format(distance_features.shape))
+        print("Distance features:\n{}".format(distance_features))
+
+Out[60]:
+   
+    Distance feature shape: (200, 10)
+    Distance features:
+    [[ 0.922  1.466  1.14 ...,  1.166  1.039  0.233]
+     [ 1.142  2.517  0.12 ...,  0.707  2.204  0.983]
+     [ 0.788  0.774  1.749 ..., 1.971  0.716  0.944]
+     ...,
+     [ 0.446  1.106  1.49 ...,  1.791  1.032  0.812]
+     [ 1.39   0.798  1.981 ..., 1.978  0.239  1.058]
+     [ 1.149  2.454  0.045 ..., 0.572  2.113  0.882]]
+
+
+
+\end{lstlisting} 
+
+
+k-means es un algoritmo muy popular para clustering, no solo porque es relativamente
+fácil de entender e implementar, sino porque  también corre relativamente rápido.
+ k-means  escala fácilmente  dataset grandes, y  {\ttfamily scikit-learn} incluso incluye una  variante 
+  escalable  en la clase  {\ttfamily  MiniBatchKMeans}, que puede manejar dataset muy grandes.\\
+  
+
+Uno de los inconvenientes de k-means es que se basa en una inicialización aleatoria, que
+significa que el resultado del algoritmo depende de una semilla aleatoria. Por defecto, {\ttfamily scikit-learn}  corre   el algoritmo 10 veces con 10 inicializaciones aleatorias diferentes, y
+devuelve el mejor resultado.   
+Otras desventajas de k-means son los supuestos   restrictivos de  k-means  sobre la forma de los grupos y el requisito de especificar el número  de grupos a buscar (aplicación que podría no ser conocido
+en el mundo real).\\
+
+
+A continuación, veremos dos algoritmos de agrupación, que mejoran esos inconvenientes en alguna forma.
+
+
+\subsection{Clúster  Aglomerativo \\ (Agglomerative Clustering)}
+
+El  Clúster  Aglomerativo o  agrupamiento aglomerativo se refiere a una colección de algoritmos de agrupamiento que todos se basan en los mismos principios: el algoritmo comienza declarando cada punto su propio clúster, y luego fusiona los dos clúster más similares hasta que algún criterio de parada se satisface.  El criterio de parada implementado en scikit-learn es el número de clusters, por lo que los clusters similares se fusionan hasta que sólo queda el número especificado de clusters. Hay varios criterios de vinculación que especifican exactamente cómo se mide el "{}clúster más similar"{}. Esta medida siempre se define entre dos clusters existentes. 
+
+Las siguientes tres opciones se implementan en scikit-learn:\\
+
+
+
+{\ttfamily Ward}
+
+Es la opción por defecto, ward escoge los dos clústeres para fusionarlo de tal manera que la varianza dentro de todos los clústeres aumente lo menos posible. Esto a menudo conduce a grupos que son de tamaño similar.\\
+
+
+{\ttfamily  Average}
+
+El  Average  fusiona los dos clusters que tienen la distancia media más pequeña entre todos sus puntos.\\
+
+
+
+
+{\ttfamily  Complete}
+
+La opción  Complete (también conocido como enlace máximo) fusiona  dos clústeres que tienen la distancia máxima más pequeña entre sus puntos.\\
+
+
+
+
+ward trabaja en la mayoría de los conjuntos de datos, y lo usaremos en nuestros ejemplos.  Si los clusters  un número muy diferente de elementos ( por ejemplo,  si uno es mucho más grande que todos los demás),  la opción  Average  o Complete podría funcionar mejor.\\
+
+
+
+La siguiente gráfica (Figura 3-33) ilustra el  progreso del clúster aglomerativo sobre un conjunto de datos bidimensionales, buscando tres grupos:\\ 
+
+
+
+\begin{lstlisting} 
+
+In[61]: mglearn.plots.plot_agglomerative_algorithm()
+   
+\end{lstlisting} 
+
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.55]{../Imagen_Machine/Aglomerativo1}
+	\caption{La agrupación de aglomeraciones se une iterativamente a los dos grupos más cercanos}
+	\label{Aglomerativo1}
+\end{figure}
+
+
+Inicialmente, cada punto es su propio clúster. Luego, en cada paso, los dos clústeres más cercanos se fusionan. En los primeros cuatro pasos, se seleccionan dos clusters de un sólo punto que se unen en clusters de dos puntos. En el paso 5, uno de los clústeres de dos puntos se extiende a un tercer punto, y así sucesivamente. En el paso 9, sólo quedan tres clústeres. Como especificamos que estamos buscando tres grupos, el algoritmo se detiene. 
+
+Veamos cómo funciona el clúster  Aglomerativo  con los  tres clústeres simples. Debido a la forma en que funciona el algoritmo, el  clúster  Aglomerativo no puede hacer predicciones para nuevos puntos de datos. 
+Por lo tanto, el  clúster  Aglomerativo no tiene un método de predicción. Para construir el modelo y obtener clúster etiquetados en el conjunto de entrenamiento, se use el  método {\ttfamily fit\_predict}. El resultado se muestra en la figura \ref{Aglomerativo2}:\\
+ 
+\begin{lstlisting}  % [frame=single]
+ 
+In[62]: from sklearn.cluster import AgglomerativeClustering
+        X, y = make_blobs(random_state=1)
+   
+        agg = AgglomerativeClustering(n_clusters=3)
+        assignment = agg.fit_predict(X)
+   
+        mglearn.discrete_scatter(X[:, 0], X[:, 1], assignment)
+        plt.xlabel("Feature 0")
+        plt.ylabel("Feature 1")
+   
+\end{lstlisting} 
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.55]{../Imagen_Machine/Aglomerativo2}
+	\caption{Asignación de clústeres utilizando clústeres aglomerativos con tres clústeres}
+	\label{Aglomerativo2}
+\end{figure}
+
+	
+
+
+Como se esperaba, el algoritmo recupera los clúster perfectamente. Mientras que el {\ttfamily scikit-learn} implementa clúster aglomerativo y  requiere que especifique el número de grupos que desea que encuentre el algoritmo, los métodos de clúster aglomerativo proporcionan una ayuda para elegir el número correcto, esta opción se discute a continuación.
+
+
+\subsubsection{Clúster jerárquico y dendrogramas}
+
+
+El clúster  Agglomerative produce lo que se conoce como clúster jerárquico. El 
+clúster procede de forma iterativa, y cada punto hace un viaje desde  un clúster con un único
+punto, hasta pertenecer a algún clúster final. Cada paso intermedio proporciona un
+agrupación de los datos (con un número diferente de agrupaciones). A veces es útil
+observar  todas las agrupaciones posibles conjuntamente. 
+
+El siguiente ejemplo (Figura \ref{Jerarquico}) muestra una superposición de todos los posibles
+ clusterings que se muestran en la Figura \ref{Aglomerativo1}, proporcionando alguna idea de cómo cada clúster se divide en grupos más pequeños:\\  
+
+\begin{lstlisting}  % [frame=single]	
+
+In[63]: mglearn.plots.plot_agglomerative()
+
+\end{lstlisting} 
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.55]{../Imagen_Machine/Jerarquico}
+	\caption{Asignación jerárquica en clústeres (mostrada como líneas) generada con el clúster Aglomerative, con los puntos   de la data   enumerandos (Figura \ref{Dendog}).}
+	\label{Jerarquico}
+	\end{figure}
+
+
+Si bien esta visualización proporciona una visión muy detallada de la agrupación jerárquica, se basa en la naturaleza bidimensional de los datos,  y  por lo tanto, no se puede utilizar en conjuntos de datos que tienen más de dos características.  Sin embargo, hay otra herramienta para visualizar
+agrupamiento jerárquico, llamado dendrograma, que puede manejar datas multidimensional.\\
+
+Desafortunadamente, {\ttfamily scikit-learn} actualmente no tiene la funcionalidad para dibujar dendrogramas.   Sin embargo, puede generarlos fácilmente con {\ttfamily SciPy}. Los algoritmos de clúster {\ttfamily SciPy} tienen una interfaz ligeramente diferente al  algoritmo de clustering  de {\ttfamily scikit-learn}. {\ttfamily SciPy} proporciona una función que toma una matriz de datos $X$ y calcula una matriz  enlace, que codifica similitudes de clúster jerárquico.
+
+Y se puede introducir esta matriz de enlaces en la función de dendrograma de Scipy para trazar el dendrograma, como se muestra a continuación (Figura \ref{Dendog}):\\
+
+
+\begin{lstlisting}  % [frame=single]	
+
+In[64]: # Import the dendrogram function and the ward clustering function 
+        # from SciPy
+        from scipy.cluster.hierarchy import dendrogram, ward
+   
+        X, y = make_blobs(random_state=0, n_samples=12)
+        # Apply the ward clustering to the data array X
+        # The SciPy ward function returns an array that specifies the 
+        # distances
+        # bridged when performing agglomerative clustering
+        linkage_array = ward(X)
+
+        # Now we plot the dendrogram for the linkage_array containing the
+        #  distances
+        # between clusters
+        dendrogram(linkage_array)
+   
+        # Mark the cuts in the tree that signify two or three clusters   
+        ax = plt.gca()
+        bounds = ax.get_xbound()
+        ax.plot(bounds, [7.25, 7.25], '--', c='k')
+        ax.plot(bounds, [4, 4], '--', c='k')
+   
+        ax.text(bounds[1], 7.25, ' two clusters', va='center',
+                fontdict={'size': 15})
+        ax.text(bounds[1], 4, ' three clusters', va='center', 
+                fontdict={'size': 15})
+        plt.xlabel("Sample index")
+        plt.ylabel("Cluster distance")
+
+\end{lstlisting} 
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.55]{../Imagen_Machine/Dendog}
+	\caption{Dendrograma del clúster mostrado en la Figura \ref{Jerarquico} con líneas que indican divisiones en dos y tres grupos}
+	\label{Dendog}
+\end{figure}
+
+
+El dendrograma muestra los puntos de datos como puntos en la parte inferior (numerados de 0 a 11). Luego, se grafica un árbol con estos puntos (representando clusters de un solo punto) como las hojas, y se añade un nuevo nodo padre para cada dos  clusters que se unen. Leyendo de abajo hacia arriba, los puntos de datos 1 y 4 se unen primero (como se puede ver en la Figura \ref{Aglomerativo1}).  A continuación, los puntos 6 y 9 se unen en un grupo, y así sucesivamente. En el nivel superior, hay dos ramas, una que consta de los puntos 11, 0, 5, 10, 7, 6 y 9, y la otra que consta de los puntos 1, 4, 3, 2 y 8.   Estos corresponden a los dos clústeres más grandes en el lado izquierdo del gráfico.\\
+
+
+El eje $y$ del el dendrograma, no solo especifica cuándo en el algoritmo  Agglomerative  fusiona dos clústers, sino también la longitud de separación de los clusters fusionados  en cada nodo o rama. Las ramas más largas en este dendrograma son las tres líneas que están marcadas por la línea de los "{}tres grupos".{}  El hecho de que estas sean las ramas más largas, indica que pasar de tres a dos grupos significó fusionar algunos puntos muy distantes. Vemos esto de nuevo en la parte superior del gráfico, donde la fusión de los dos clúster restantes en un sólo clúster, se hace  con  puentes de una distancia relativamente grande. \\
+
+Desafortunadamente, el clustering  Agglomerative  falla al intentar separar formas complejas como el conjunto de datos de {\ttfamily two\_moons}. Este inconveniente lo supera al algoritmo DBSCAN,  en la siguiente sección se describe este algoritmo. Sin embargo, tanto Agglomerative como DBSCAN, no permiten predicciones para nuevos  datos de prueba, pero se puede implementar  {\ttfamily fit\_predict} para la predicción.
+
+
+
+\subsection{DBSCAN}  
+
+Otro algoritmo clúster  muy usado  es DBSCAN, que significa   "{}agrupación espacial basada en densidad de aplicaciones con ruido"{}  ({}densitybased spatial clustering of applications with noise{}). Los principales beneficios de DBSCAN es que no requiere que el usuario establezca el número de clústeres a priori,   puede capturar clusteres  de formas complejas,  y pueden identificar puntos que no forman parte del cluster.  DBSCAN es algo más lento que el clustering agglomerative y k-means, pero puede escala dataset relativamente grandes.\\
+
+
+
+DBSCAN funciona identificando puntos que se encuentran en regiones "{}abarrotadas{}"  {} en el 
+espacio de caraterísticas, donde hay muchos puntos de datos  juntos. Estas regiones se conocen como
+regiones densas en el espacio de características. La idea detrás de DBSCAN es que los clústeres que forman regiones densas de datos, estan  separadas por regiones que están relativamente vacías. \\
+ 
+ Los puntos que se encuentran dentro de una región densa se denominan muestras  núcleos (muestras centrales) o puntos  núcleo.    El algoritmos tiene dos parámetro, un mínimo de muestras  {\ttfamily min\_samples}  y  una distancia  {\ttfamily eps}. Si  hay  al  menos  una cierta cantidad  puntos {\ttfamily min\_samples}   dentro de una distancia dada {\ttfamily eps} a un determinado  punto, ese punto  se clasifica como una muestra núcleo.     
+Las muestras núcleos que se encuentran a menor distancia (entre sí) que  {\ttfamily eps}, son colocadas  en un  mismo clúster. \\
+
+ El   algoritmo funciona seleccionando un punto arbitrario para comenzar. Luego encuentra todos los puntos que que están a menor o igual distancia {\ttfamily eps}   a ese punto. Si hay menos de  {\ttfamily min\_samples} puntos dentro de la distancia {\ttfamily eps}  del punto de partida, este punto es etiquetado como ruido, lo que significa que no pertenece a ningún clúster; si hay más de {\ttfamily min\_samples} puntos dentro  de una distancia de  {\ttfamily eps}, el punto es etiqueta como una muestra núcleo y se le asigna una nueva etiqueta de clúster. Luego,  todos los vecinos (dentro de  {\ttfamily eps}) del punto son visitados, si algunos de ellos  aún no han sido asignados a ningún grupo, se les asigna la nueva etiqueta del grupo que se acaba de crear. Si son muestras núcleo, sus vecinos son visitados por turnos, y así sucesivamente.  El  clúster  crece hasta que no haya más muestras  núcleo dentro de la distancia  {\ttfamily eps} del clúster. Luego se selecciona otro punto que aún no se ha visitado, y el mismo procedimiento es  repetido.\\
+
+
+
+Al final, hay tres tipos de puntos: los puntos núcleos o centrales, los puntos que están dentro de distancia  {\ttfamily eps}   de los puntos núcleos (llamados puntos  límite o frontera), y los puntos ruido.     Cuando el algoritmo DBSCAN se ejecuta sobre una dataset particular varias veces, el clustering  de los puntos núcleos  siempre es el mismo, y los puntos que se etiquetarán como ruido también son los mismos. Sin embargo, un punto  límite  podría ser vecino de más  un clúster de muestra  núcleo.  Por lo tanto, la pertenencia al clúster de los puntos límite depende del orden en que se visiten los puntos.  Por lo general, sólo hay unos pocos puntos límite, y esta ligera dependencia del  orden no es importante.\\
+
+
+A continuación se aplicar la ténica DBSCAN sobre la data sintética que utilizamos para ilustrar el clúster Agglomerative.  DBSCAN no permite predicciones sobre nuevos datos de prueba, por lo que utilizaremos el método {\ttfamily fit\_predict} para correr el clustering  y  devolver las etiquetas de clúster en un sólo paso:\\ 
+
+\begin{lstlisting} 
+In[65]: from sklearn.cluster import DBSCAN
+        # Dataset Toy
+        X, y = make_blobs(random_state=0, n_samples=12)  
+   
+        dbscan = DBSCAN()
+        clusters = dbscan.fit_predict(X)
+        print("Cluster memberships:\n{}".format(clusters))
+
+Out[65]:
+    
+    Cluster memberships:
+    [-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]
+
+
+\end{lstlisting}  % [frame=single]	
+
+
+
+Como puede ver,  todos los puntos de la dataset   se les asignó la etiqueta -1,  lo que significa que son   ruido.  Esto es una consecuencia de la configuración de parámetros por defecto para  {\ttfamily eps} y
+ {\ttfamily min\_samples}, que no están ajustados  para la dataset  pequeña de Toy. 
+
+A continuación se  muestran Los clústers asignados  para diferentes valores de {\ttfamily min\_samples} y  {\ttfamily eps}, y se visualizan en la Figura \ref{DBSCAN1}:\\ 
+
+\begin{lstlisting}  
+In[66]: mglearn.plots.plot_dbscan()
+
+Out[66]:
+   
+    min_samples: 2 eps: 1.000000 cluster: [-1 0 0 -1 0 -1 1 1 0 1 -1 -1]
+    min_samples: 2 eps: 1.500000 cluster: [0 1 1 1 1 0 2 2 1 2 2 0]
+    min_samples: 2 eps: 2.000000 cluster: [0 1 1 1 1 0 0 0 1 0 0 0]
+    min_samples: 2 eps: 3.000000 cluster: [0 0 0 0 0 0 0 0 0 0 0 0]
+    min_samples: 3 eps: 1.000000 cluster: [-1 0 0 -1 0 -1 1 1 0 1 -1 -1]
+    min_samples: 3 eps: 1.500000 cluster: [0 1 1 1 1 0 2 2 1 2 2 0]
+    min_samples: 3 eps: 2.000000 cluster: [0 1 1 1 1 0 0 0 1 0 0 0]
+    min_samples: 3 eps: 3.000000 cluster: [0 0 0 0 0 0 0 0 0 0 0 0]
+    min_samples: 5 eps: 1.000000 cluster: [-1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+                                           -1 -1]
+    min_samples: 5 eps: 1.500000 cluster: [-1 0 0 0 0 -1 -1 -1 0 -1 -1 -1]
+    min_samples: 5 eps: 2.000000 cluster: [-1 0 0 0 0 -1 -1 -1 0 -1 -1 -1]
+    min_samples: 5 eps: 3.000000 cluster: [0 0 0 0 0 0 0 0 0 0 0 0]
+
+\end{lstlisting} 
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.75]{../Imagen_Machine/DBSCAN1}
+	\caption{Asignaciones de clúster encontradas por DBSCAN con ajustes variables 
+		para los parámetros  {\ttfamily min\_samples}  y  {\ttfamily eps} }
+	\label{DBSCAN1}
+\end{figure}
+
+
+En el  gráfico \ref{DBSCAN1}, los puntos que pertenecen a clusters son figuras sólidos, mientras que los puntos  ruido se muestran en blanco. Las muestras  núcleo se muestran como marcas grandes, mientras que los puntos de límite se muestran  como marcas más pequeñas.
+
+El incremento de {\ttfamily eps} (de izquierda a derecha en la figura \ref{DBSCAN1}) significa que más puntos serán incluidos en un clúster. Esto hace que los clúster crezcan, pero también puede conducir a que varios clúster se unan en uno sólo. El aumento de {\ttfamily min\_samples} (de arriba a abajo en la figura \ref{DBSCAN1}) significa que menos puntos serán clasificados como puntos núcleos, y más puntos serán etiquetados como ruido.
+
+El parámetro {\ttfamily eps} es  importante, ya que determina lo que significa estar   "{}cerca"{}  (algo como distancia). Configurar {\ttfamily eps} para que sea muy pequeño significará que no hay puntos como muestras  núcleos, y puede llevar a que todos los puntos se etiqueten como ruido, mientras que configurar {\ttfamily eps} para que sea muy grande dará como resultado que todos los puntos formen un único grupo.\\
+
+
+La configuración  {\ttfamily min\_samples}  determina principalmente si los puntos en regiones menos densas
+seran etiquetados como valores atípicos o como sus propios grupos.  Si disminuye {\ttfamily min\_samples}, cualquier cosa que hubiera sido un clúster con menos de {\ttfamily min\_samples}, muchas muestras ahora serán etiquetadas como ruido. El parámetro {\ttfamily min\_samples} determina el tamaño mínimo del grupo.   Esta situación puede verse claramente en la Figura \ref{DBSCAN1}, cuando el  {\ttfamily min\_samples}  va de 3  a  5  con {\ttfamily  eps} =1.5. En el caso de  {\ttfamily min\_samples}=3, hay tres grupos: uno de cuatro {\ttfamily min\_samples}, uno de cinco y uno de tres.  Usando {\ttfamily min\_samples}= 5, los dos clúster pequeños (con tres y cuatro puntos) ahora son etiquetados como ruido, y sólo un clúster con las cinco muestras restantes.\\
+ 
+
+DBSCAN no requiere establecer el número de clústeres explícitamente, la configuración de {\ttfamily eps}
+controla implícitamente cuántos grupos se encontrarán. Encontrar una buena configuración para {\ttfamily eps}   a veces es más fácil después de escalar los datos usando  {\ttfamily StandardScaler  o  MinMaxScaler},  pues el  uso de las técnicas para escalar la data garantizará que todas las características tengan rangos similares. \\
+
+La Figura \ref{DBSCAN2} muestra el resultado de ejecutar DBSCAN sobre la  dataset {\ttfamily two\_moons}. El algoritmo realmente encuentra los dos semicírculos (half-circles) y los separa usando la configuración por defecto:
+
+
+\begin{lstlisting}  % [frame=single]
+	
+In[67]: X, y = make_moons(n_samples=200, noise=0.05, random_state=0)
+   
+        # rescale the data to zero mean and unit variance
+        scaler = StandardScaler()
+        scaler.fit(X)
+        X_scaled = scaler.transform(X)
+   
+        dbscan = DBSCAN()
+        clusters = dbscan.fit_predict(X_scaled)
+        # plot the cluster assignments
+        plt.scatter(X_scaled[:, 0], X_scaled[:, 1], c=clusters,
+                    cmap=mglearn.cm2, s=60)
+        plt.xlabel("Feature 0")
+        plt.ylabel("Feature 1")
+   
+\end{lstlisting} 
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.55]{../Imagen_Machine/DBSCAN2}
+	\caption{Asignación de clúster encontrada por DBSCAN utilizando el valor predeterminado de {\ttfamily eps} = 0.5 }
+	\label{DBSCAN2}
+\end{figure}
+
+
+El algoritmo produce el número deseado de clusters (en este caso dos), el conjunto de parámetros parece funcionar bien. Si disminuimos {\ttfamily eps} a 0.2 (el valor por defecto es 0.5), obtendremos ocho clusters,  claramente son demasiado. El aumento de {\ttfamily eps} a 0.7 resulta en un sólo clúster.\\
+
+Al utilizar DBSCAN, es necesario ser cuidadoso con el manejo de las asignaciones de clúster que retorna. 
+El uso de -1 para indicar ruido puede provocar efectos inesperados al usar las etiquetas del clúster  para indexar otra matriz.
+
+
+
+
+
+\subsection{Comparando y evaluando los  algoritmos de Clúster}  
+
+Uno de los desafíos en la aplicación de algoritmos de clustering es que es muy difícil evaluar
+qué tan bien funcionó un algoritmo, y comparar los resultados entre diferentes algoritmos. Después de hablar de los algoritmos  k-means, agglomerative y DBSCAN, ahora podemos compararlo sobre algunas 
+dataset  del mundo real.
+
+
+\subsubsection{Evaluar los clustering con la verdad fundamental}
+
+
+
+Hay métricas que se pueden utilizar para evaluar el resultado de un algoritmo de agrupamiento relativo a una verdad fundamental (clúster correcto)\index{verdad fundamental}, las más importantes son el índice de aleatoriedad ajustado (adjusted rand
+index, ARI) y la información mutua normalizada (normalized mutual information, NMI),  ambos proporcionan una medida cuantitativa  entre 0 y 1. \\
+
+Analicemos los algoritmos k-media, Agglomerative  y  DBSCAN  comparando los resultados con métrica ARI. También se incluye cómo se ve cuando asignamos puntos aleatoriamente a dos clusters para efecto de  comparar (ver Figura \ref{ComparDBSCAN}):\\
+ 
+\begin{lstlisting}  	
+
+In[68]: from sklearn.metrics.cluster import adjusted_rand_score
+        X, y = make_moons(n_samples=200, noise=0.05, random_state=0)
+   
+        # rescale the data to zero mean and unit variance
+        scaler = StandardScaler()
+        scaler.fit(X)
+        X_scaled = scaler.transform(X)
+   
+        fig, axes = plt.subplots(1, 4, figsize=(15, 3),
+                                 subplot_kw={'xticks': (), 'yticks': ()})
+  
+        # make a list of algorithms to use
+        algorithms = [KMeans(n_clusters=2), 
+                      AgglomerativeClustering(n_clusters=2), DBSCAN()]
+                 
+        # create a random cluster assignment for reference
+        random_state = np.random.RandomState(seed=0)
+        random_clusters = random_state.randint(low=0, high=2, size=len(X))
+  
+        # plot random assignment
+        axes[0].scatter(X_scaled[:, 0], X_scaled[:, 1], c=random_clusters,
+                        cmap=mglearn.cm3, s=60)
+        axes[0].set_title("Random assignment - ARI: {:.2f}".format(
+                           adjusted_rand_score(y, random_clusters)))
+           
+        for ax, algorithm in zip(axes[1:], algorithms):
+             # plot the cluster assignments and cluster centers
+             clusters = algorithm.fit_predict(X_scaled)
+             ax.scatter(X_scaled[:, 0], X_scaled[:, 1], c=clusters,
+                       cmap=mglearn.cm3, s=60)
+             ax.set_title("{} - ARI: {:.2f}".format(
+                     algorithm.__class__.__name__, 
+                     adjusted_rand_score(y, clusters)))
+
+\end{lstlisting} 
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.65]{../Imagen_Machine/ComparDBSCAN}
+	\caption{Comparación de asignación aleatoria, k-media, Agglomerative  y  DBSCAN sobre la data {\ttfamily two\_moons}, usando la puntuación supervisada  ARI}
+	\label{ComparDBSCAN}
+\end{figure}
+
+%  índice aleatorio adjusted
+ 
+El  ARI  proporciona resultados muy intuitivos,  la  asignación  aleatoria de clúster 
+ resultó con una puntuación de 0, y   DBSCAN resultó con una puntuación de 1 (que recupera la agrupación deseada  perfectamente).\\
+
+
+Un error común al evaluar la agrupación de esta manera es usar la métrica exactitud  ({\ttfamily accuracy\_score}) en lugar de ARI, NMI , o alguna otra métrica de agrupación.  El problema en el uso de la exactitud  es que requiere las etiquetas de clúster asignadas para que coincidan exactamente con la verdad fundamental. Sin embargo, las etiquetas de clúster en sí no tienen sentido, lo único que importa es qué puntos están en el mismo clúster:
+
+
+\begin{lstlisting}  
+	
+In[69]: from sklearn.metrics import accuracy_score
+   
+        # these two labelings of points correspond to the same clustering
+        clusters1 = [0, 0, 1, 1, 0]
+        clusters2 = [1, 1, 0, 0, 1]
+        # accuracy is zero, as none of the labels are the same
+        print("Accuracy: {:.2f}".format(
+               accuracy_score(clusters1, clusters2)))
+        # adjusted rand score is 1, as the clustering is exactly the same
+        print("ARI: {:.2f}".format(
+               adjusted_rand_score(clusters1, clusters2)))
+
+Out[69]:
+
+    Accuracy: 0.00
+    ARI: 1.00
+
+\end{lstlisting} 
+
+
+\subsubsection{Evaluar la agrupación sin la verdad fundamental} 
+
+Aunque acabamos de mostrar una manera de evaluar los algoritmos de  clustering, en la práctica, hay un gran problema con el uso de medida como ARI. Al aplicar los algoritmos de  clustering, generalmente no hay verdad fundamental con la que se va comparar los resultados.   Si conociéramos el clúster correcto\index{verdad fundamental} de los datos, podríamos usar esta información para construir un modelo supervisado como un clasificador. Por lo tanto, el uso de métricas como ARI y NMI por lo general sólo ayuda en el desarrollo de algoritmos, no en la evaluación de éxito en una aplicación. \\
+
+
+Hay métricas de puntuación para los clustering que no requieren la verdad fundamental, como el \emph{\bf{coeficiente de silhouette}}. Sin embargo, estos a menudo no funcionan bien en la práctica. La puntuación de silhouette calcula la densidad (compacidad) de un clúster, donde más alto es mejor, con una puntuación perfecta igual a  1.
+
+Mientras los clúster compactos son buenos, la compacidad no permite formas complejas. Aquí hay un ejemplo que compara el resultado de k-medias, Agglomerative y DBSCAN sobre la  dataset {\ttfamily two-moons}   usando la puntuación de {\ttfamily silhouette\_score} (Figura \ref{ComparDBSCAN2}):
+
+
+\begin{lstlisting}  % [frame=single]	
+
+In[70]: from sklearn.metrics.cluster import silhouette_score
+   
+        X, y = make_moons(n_samples=200, noise=0.05, random_state=0)
+        # rescale the data to zero mean and unit variance
+        scaler = StandardScaler()
+        scaler.fit(X)
+        X_scaled = scaler.transform(X)
+
+        fig, axes = plt.subplots(1, 4, figsize=(15, 3),
+                                 subplot_kw={'xticks': (), 'yticks': ()})
+                            
+        # create a random cluster assignment for reference
+        random_state = np.random.RandomState(seed=0)
+        random_clusters = random_state.randint(low=0, high=2, size=len(X))
+  
+        # plot random assignment
+        axes[0].scatter(X_scaled[:, 0], X_scaled[:, 1], c=random_clusters,
+            cmap=mglearn.cm3, s=60)
+        axes[0].set_title("Random assignment: {:.2f}".format(
+            silhouette_score(X_scaled, random_clusters)))
+  
+        algorithms = [KMeans(n_clusters=2), 
+                      AgglomerativeClustering(n_clusters=2), DBSCAN()]
+                 
+        for ax, algorithm in zip(axes[1:], algorithms):
+            clusters = algorithm.fit_predict(X_scaled)
+            # plot the cluster assignments and cluster centers
+            ax.scatter(X_scaled[:, 0], X_scaled[:, 1], c=clusters, 
+                       cmap=mglearn.cm3, s=60)
+            ax.set_title("{} : {:.2f}".format(
+                           algorithm.__class__.__name__,
+                           silhouette_score(X_scaled, clusters)))
+
+\end{lstlisting} 
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.55]{../Imagen_Machine/ComparDBSCAN2}
+	\caption{Comparación de asignación aleatoria, k-medias, Agglomerative y DBSCAN en el conjunto de datos de {\ttfamily two\_moons} usando la puntuación de \emph{silhouette} no supervisada. El resultado más intuitivo de DBSCAN tiene una puntuación de \emph{silhouette} más baja que las asignaciones encontradas por k-medias}
+	\label{ComparDBSCAN2}
+\end{figure}
+
+Como se puede ver, k-medias  obtiene la puntuación más alta de silhouette, a pesar de que podríamos  preferir el resultado generado por DBSCAN. Una estrategia ligeramente mejor para evaluar los clústeres es usar métricas de clustering basadas en la robustez.  Estos ejecutan un algoritmo después de añadir algo de ruido a los datos, o usando diferentes parámetros de configuración, y comparar los resultados. La idea es que si muchos parámetros del algoritmo y muchas perturbaciones en la data  devuelven el mismo resultado, es probable que sea confiable.  Desafortunadamente, esta estrategia no está implementa en {\ttfamily scikit-learn} al momento de escribir este libro.\\
+
+ Incluso si obtenemos una técnica de  clúster muy robusta, o una puntuación  muy alta de \emph{silhouette}, todavía no conocemos si hay algún significado semántico en el agrupamiento, o si el agrupamiento
+refleja un aspecto de los datos que nos interese.  
+
+Volvamos al ejemplo de imágenes de la cara.  Esperamos encontrar grupos de rostros similares, digamos, hombres y mujeres, ancianos y jóvenes, o personas con barba y sin barba.
+
+Digamos que agrupamos el datos en dos clusters,  y todos los algoritmos están de acuerdo sobre qué puntos deben agruparse juntos.  Todavía no sabemos si los grupos que se encuentran corresponden a alguna forma en conceptos que nos interesan. Podría ser que encontraron vistas laterales versus vistas frontales o fotos tomadas de noche versus fotos tomadas durante el día, o fotos tomados con iPhones versus imágenes tomadas con teléfonos Android.  La única manera de saber si la agrupación corresponde a algo que nos interese es analizar  los clústers manualmente. 
+ 
+
+\subsection{Comparación de los algoritmos sobre la dataset de caras}
+
+
+Apliquemos los algoritmos de k-means, DBSCAN, y Agglomerative a la dataset Wild  de caras  etiquetadas, y veamos si alguno de ellos encuentra alguna estructura interesante. Utilizaremos la representación eigenface (caras propias) de los datos, tal como la genera {\ttfamily PCA(whiten=True)}, con 100 componentes:
+
+
+\begin{lstlisting}  % [frame=single]	
+
+In[71]: # extract eigenfaces from lfw data and transform data
+        from sklearn.decomposition import PCA
+        pca = PCA(n_components=100, whiten=True, random_state=0)
+        pca.fit_transform(X_people)
+        X_pca = pca.transform(X_people)
+
+
+\end{lstlisting} 
+
+
+Como vimos antes,  esta es una representación más semántica de las imágenes de la cara que los píxeles en bruto; y  también hará que el cálculo sea más rápido. Un buen ejercicio sería ejecutar los siguientes experimentos sobre la data  original, sin PCA, y ver si se encuentran grupos similares.
+
+
+\subsubsection{Analizando la data de caras con DBSCAN}
+ 
+ Comenzamos  aplicando  DBSCAN, que acabamos de discutir:
+
+\begin{lstlisting} 
+
+In[72]: # apply DBSCAN with default parameters
+        dbscan = DBSCAN()
+        labels = dbscan.fit_predict(X_pca)
+        print("Unique labels: {}".format(np.unique(labels)))
+
+Out[72]:
+    
+    Unique labels: [-1]
+
+\end{lstlisting} 
+
+
+
+Vemos que todas las etiquetas devueltas son -1, por lo que todos los datos fueron etiquetados como "{}ruido"{}  por DBSCAN. Hay dos cosas que podemos cambiar para mejorar este resultado: podemos hacer el {\ttfamily eps} más alto, para expandir la vecindad de cada punto, y configurar el {\ttfamily min\_samples} más bajo, para considerar grupos más pequeños (grupos con menos puntos) como clúster. Intentemos primero cambiando {\ttfamily min\_samples}:
+
+
+\begin{lstlisting}  % [frame=single]	
+
+
+In[73]: dbscan = DBSCAN(min_samples=3)
+        labels = dbscan.fit_predict(X_pca)
+        print("Unique labels: {}".format(np.unique(labels)))
+
+Out[73]:
+    
+    Unique labels: [-1]
+
+\end{lstlisting} 
+
+
+Incluso cuando se consideran grupos de tres puntos, todo está etiquetado como ruido. Por 
+lo tanto, tenemos que aumentar {\ttfamily eps}:
+
+\begin{lstlisting}  % [frame=single]	
+
+In[74]: dbscan = DBSCAN(min_samples=3, eps=15)
+        labels = dbscan.fit_predict(X_pca)
+        print("Unique labels: {}".format(np.unique(labels)))
+
+Out[74]:
+
+    Unique labels: [-1 0]
+
+
+\end{lstlisting} 
+
+
+
+
+Usando un {\ttfamily eps}  mucho más grande, como  15, obtenemos solo un clúster y puntos  ruido. Podemos usar este resultado para averiguar cómo se ve el "{}ruido"{ }   en comparación con el resto de los datos. Para entender mejor lo que está sucediendo, veamos cuántos puntos son ruido, y cuántos puntos están dentro del clúster:
+
+\begin{lstlisting}  
+
+In[75]: # Cuenta el numero de puntos en los grupos y del ruido.
+        # El contador bincount no permite numeros negativos,
+        # asi que tenemos que sumar 1.
+        # El primer numero del resultado corresponde a los puntos ruido.
+        print("Numero de puntos por grupo: {}".format(
+               np.bincount(labels + 1)))
+
+Out[75]:
+   
+   Numero de puntos por grupo: [ 27 2036]
+
+\end{lstlisting} 
+
+
+Hay muy pocos puntos  ruido, sólo 27, por lo que podemos verlos a todos 
+(Figura \ref{CarasDBSCAN1}):
+
+\begin{lstlisting} 
+
+In[76]: noise = X_people[labels==-1]
+   
+        fig, axes = plt.subplots(3, 9, 
+                                 subplot_kw={'xticks': (), 'yticks': ()},
+                                 figsize=(12, 4))
+        for image, ax in zip(noise, axes.ravel()):
+            ax.imshow(image.reshape(image_shape), vmin=0, vmax=1)
+     
+\end{lstlisting} 
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.55]{../Imagen_Machine/CarasDBSCAN1}
+	\caption{Muestras del conjunto de datos de las caras etiquetadas como ruido por DBSCAN}
+	\label{CarasDBSCAN1}
+\end{figure}
+
+
+Comparando estas imágenes con la muestra aleatoria de las  imágenes de caras  de la figura \ref{Caras1}, podemos adivinar por qué fueron etiquetados como ruido: la quinta imagen en la primera fila muestra una persona  bebiendo en un vaso, hay imágenes de personas con sombreros, y en la última
+imagen hay una mano delante de la cara de la persona. Las otras imágenes contienen extraños puntos de vista,  recortardas,  que son demasiado cercanos o demasiados anchos.\\
+
+Este tipo de análisis, tratando de encontrar "{}lo extraño"{}, se llama detección de valores atípicos. Si
+esta fuese una aplicación real, podríamos intentar hacer un mejor trabajo recortando imágenes, para obtener
+datos más homogéneos. Es poco lo que podemos hacer con la gente en las fotos a veces usando sombreros, bebiendo o sosteniendo algo frente a sus caras, pero es bueno saber que éstos son asuntos en los datos que cualquier algoritmo que podamos aplicar necesita manejar.\\
+
+Si queremos encontrar clusters más interesantes en lugar de uno sólo grande, necesitamos configurar el {\ttfamily eps}  más pequeño, algo entre  15 y 0.5 (0.5 es el  valor por defecto).  Veamos  que resulta con  valores diferentes {\ttfamily eps}:
+
+
+\begin{lstlisting}  % [frame=single]	
+
+In[77]: for eps in [1, 3, 5, 7, 9, 11, 13]:
+            print("\neps={}".format(eps))
+            dbscan = DBSCAN(eps=eps, min_samples=3)
+            labels = dbscan.fit_predict(X_pca)
+            print("Clusters present: {}".format(np.unique(labels)))
+            print("Cluster sizes: {}".format(np.bincount(labels + 1)))
+
+Out[78]:
+
+    eps=1
+    Clusters present: [-1]
+    Cluster sizes: [2063]
+    
+    eps=3
+    Clusters present: [-1]
+    Cluster sizes: [2063]
+
+    eps=5
+    Clusters present: [-1]
+    Cluster sizes: [2063]
+    
+    eps=7
+    Clusters present: [-1 0 1 2 3 4 5 6 7 8 9 10 11 12]
+    Cluster sizes: [2006 4 6 6 6 9 3 3 4 3 3 3 3 4]
+    
+    eps=9
+    Clusters present: [-1 0 1 2]
+    Cluster sizes: [1269 788 3 3]
+    
+    eps=11
+    Clusters present: [-1 0]
+    Cluster sizes: [ 430 1633]
+    
+    eps=13
+    Clusters present: [-1 0]
+    Cluster sizes: [ 112 1951]
+
+\end{lstlisting} 
+
+
+Para configuraciones bajas de {\ttfamily eps}, todos los puntos están etiquetados como ruido. 
+Para {\ttfamily eps} = 7, obtenemos  2006  puntos ruido,  y 12  grupos más pequeños. Para {\ttfamily eps} = 9,  todavía  obtenemos muchos puntos ruido, pero obtenemos un grupo grande y algunos grupos más pequeños. A partir de {\ttfamily eps} = 11, obtenemos un  sólo grupo  grande y los puntos ruido.\\
+
+
+Es interesante notar que sólo  hay  un grupo grande. A lo sumo, hay un grupo grande que contiene la mayoría de los puntos y algunos grupos más pequeños. Esto indica que no hay dos o tres tipos diferentes de imágenes de rostros en los datos que son muy distintos, sino que todas las imágenes son más o menos igualmente similares al (o diferente del) resto.\\
+
+
+Los resultados para {\ttfamily eps} = 7 se ven más interesantes, con muchos grupos pequeños. Podemos investigar  esta agrupación con más detalle visualizando todos los puntos en cada uno de los 13
+pequeños grupos (Figura \ref{VistaInverT}):
+
+\begin{lstlisting}  
+
+In[78]: dbscan = DBSCAN(min_samples=3, eps=7)
+        labels = dbscan.fit_predict(X_pca)
+        for cluster in range(max(labels) + 1):
+            mask = labels == cluster
+            n_images = np.sum(mask)
+            fig, axes = plt.subplots(1, n_images, 
+                                     figsize=(n_images * 1.5, 4),
+                                     subplot_kw={'xticks':(), 'yticks': ()})
+            for image, label, ax in zip(X_people[mask],
+                                        y_people[mask], axes):
+       
+                ax.imshow(image.reshape(image_shape), vmin=0, vmax=1)
+                ax.set_title(people.target_names[label].split()[-1])
+
+\end{lstlisting} 
+
+
+%  \newpage
+%\addtolength{\voffset}{-3cm}
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=16.6cm, height=13cm, angle=-90]{../Imagen_Machine/VistaInverT}
+	\caption{Clusters encontrados por DBSCAN con eps = 7}
+	\label{VistaInverT}
+\end{figure}
+%\addtolength{\voffset}{4cm}	
+
+
+Algunos de los grupos corresponden a las personas con caras muy distintas (dentro de esta dataset), como Sharon o Koizumi. Dentro de cada grupo, la orientación de la cara es también bastante fijo, así como la expresión facial.  Algunos de los clusters contienen caras de multiples personas, pero comparten una orientación y expresión similares.\\
+
+Esto concluye el análisis con el algoritmo DBSCAN aplicado sobre la dataset de  caras (faces). Como puede ver,  en este caso  hicimos un análisis manual, muy  distinto del enfoque de búsqueda  automático que podríamos utilizar con el aprendizaje supervisado basado en la puntuación $R^{2}$ o exactitud.\\
+
+Ahora veamos las técnicas de k-medias y  agglomerative  aplicado a la dataset de caras.
+
+
+
+
+\subsubsection{Analizando la dataset de caras con k-means}
+
+
+ En la sección anterior, vimos que no fue posible crear más de un  clúster grande usando DBSCAN.  Con las técnicas de   clustering Agglomerative  y   k-means  hay mayor posiblilidad de  crear agrupos de tamaño uniforme, pero necesitamos configurar el número  de clústers. Podríamos establecer el número de clústeres igual al número  de personas conocidas en la dataset, pero es poco probable que un algoritmo de clusters no supervisado los recupere. En su lugar, podemos comenzar con un número bajo de clusters, como 10, lo que podría permitirnos analizar cada uno de los clusters:\\
+
+
+\begin{lstlisting}  % [frame=single]	
+
+In[79]: # extract clusters with k-means
+        km = KMeans(n_clusters=10, random_state=0)
+        labels_km = km.fit_predict(X_pca)
+        print("Cluster sizes k-means: {}".format(np.bincount(labels_km)))
+
+Out[79]:
+
+    Cluster sizes k-means: [269 128 170 186 386 222 237 64 253 148]
+
+
+\end{lstlisting} 
+
+
+
+Como puedes ver, k-means divide los datos en grupos de tamaño relativamente similar entre 64 a 386. Este resultado es muy diferente al obtenido con  DBSCAN.\\
+
+ Podemos analizar más a fondo el resultado de k-means visualizando los centros de clúster (Figure \ref{Kmedias10Clust}). Como en el caso del clúster en la representación generada por PCA, necesitamos rotar los centros de clúster de nuevo en el espacio original para visualizarlos, utilizando {\ttfamily pca.inverse\_transform}:\\
+
+\begin{lstlisting}  % [frame=single]
+
+In[80]: fig, axes = plt.subplots(2, 5, 
+                                 subplot_kw={'xticks': (), 'yticks': ()},
+                                 figsize=(12, 4))
+        for center, ax in zip(km.cluster_centers_, axes.ravel()):
+            ax.imshow(pca.inverse_transform(center).reshape(image_shape),
+                      vmin=0, vmax=1)
+
+
+\end{lstlisting} 
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.60]{../Imagen_Machine/Kmedias10Clust}
+	\caption{Centros de clústeres encontrados por medios k al establecer el número de clústeres a 10}
+	\label{Kmedias10Clust}
+\end{figure}
+
+
+Los centros de clusters encontrados por k-means son versiones muy suaves de caras. Esto no es
+muy sorprendente, dado que cada centro tiene un promedio de 64 a 386 imágenes de caras. 
+Trabajar con una representación PCA reducida aumenta la suavidad de las imágenes (en comparación
+a las caras reconstruidas utilizando 100 dimensiones de PCA en la Figura \ref{Reconstruc}). 
+El clustering  parece captar diferentes orientaciones de la cara, diferentes expresiones (el tercer centro de clúster parece mostrar una cara sonriente) y la presencia de cuellos de camisa (ver el
+penúltimo centro de clúster).\\
+
+
+Para una vista más detallada, en la Figure \ref{3-44} se muestra  para cada centro de clúster las cinco
+imágenes típicas en el clúster (las imágenes asignadas al clúster más cercanas al
+centro del grupo) y las cinco imágenes más atípicas en el grupo (las imágenes asignadas a
+el clúster más alejado del centro del clúster):
+
+\begin{lstlisting} 
+
+In[81]: mglearn.plots.plot_kmeans_faces(km, pca, X_pca, X_people,
+                                        y_people, people.target_names)
+
+\end{lstlisting} 
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=16.1cm, height=13cm, angle=-90]{../Imagen_Machine/3-44}
+	\caption{Imágenes de muestra para cada clúster encontrado por k-means, los centros de clúster están a la izquierda, seguidos por los cinco puntos más cercanos a cada centro y los cinco puntos asignados al clúster pero están más lejos del centro}
+	\label{3-44}
+\end{figure}
+
+
+
+La figura \ref{3-44} confirma nuestra intuición sobre caras sonrientes para el tercer clúster, y también la importancia de la orientación para los otros clúster. Los puntos "{}atípicos"{}  no son muy similares a los centros de clúster, sin embargo, y su asignación parece algo arbitrario. Esto se puede atribuir al hecho de que las  particiones en k-medias, todos los puntos de datos y no tiene un concepto punto  "{}ruido"{ }, como en DBSCAN. Usando un mayor número de clústeres, el algoritmo podría encontrar distinciones más finas. Sin embargo, agregar más clústeres hace la inspección manual aún más difícil. 
+
+
+\subsubsection{Analizando la data de caras con  Agglomerative}
+
+ Ahora, veamos los resultados del  clúster Agglomerative:
+
+\begin{lstlisting} 
+
+In[82]: # extract clusters with ward agglomerative clustering
+        agglomerative = AgglomerativeClustering(n_clusters=10)
+        labels_agg = agglomerative.fit_predict(X_pca)
+        print("Cluster sizes agglomerative: {}".format(
+               np.bincount(labels_agg)))
+
+Out[82]:
+
+    Cluster sizes agglomerative: [255 623 86 102 122 199 265 26 230 155]
+
+
+\end{lstlisting} 
+
+El clúster agglomerative también produce grupos de tamaño relativamente igual, con tamaños de grupos entre 26 y 623. Estos son más desiguales que los producidos por k-medios, pero  incluso mucho más  que los producidos por DBSCAN. \\
+
+Podemos calcular el ARI para medir si las  particiones de los datos generadas por agglomerative y k-medios son similares:
+
+\begin{lstlisting}  % [frame=single]	
+
+In[83]: print("ARI: {:.2f}".format(
+               adjusted_rand_score(labels_agg, labels_km)))
+
+Out[83]:
+
+    ARI: 0.13
+
+\end{lstlisting} 
+
+
+Un ARI igual{}   0.13   {}significa que los grupos generados por las dos  técnicas de clústers  {\ttfamily "{}labels\_agg"{} }  y  {\ttfamily "{}labels\_km"{}} (sobre la data de caras), tienen  poco en  común. Esto no es muy sorprendente, dado del hecho de que los puntos más alejados de los centros de clúster parecen tener poco en común para  k-medias.\\
+
+También es posible  gráficar el dendrograma (Figura \ref{DendoAglome}).   Limitaremos la profundidad del árbol en el gráfico, ya que la ramificación hacia los 2.063 puntos de datos individuales da como resultado una gráfico denso indescifrable:
+
+%     irrazonablemente
+
+\begin{lstlisting}  
+
+In[84]: linkage_array = ward(X_pca)
+        # now we plot the dendrogram for the linkage_array
+        # containing the distances between clusters
+        plt.figure(figsize=(20, 5))
+        dendrogram(linkage_array, p=7, truncate_mode='level', no_labels=True)
+        plt.xlabel("Sample index")
+        plt.ylabel("Cluster distance")
+
+
+\end{lstlisting} 
+
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.55]{../Imagen_Machine/DendoAglome}
+	\caption{Dendrograma de agrupación aglomerante en el conjunto de datos de caras}
+	\label{DendoAglome}
+\end{figure}
+
+
+Para crear 10 grupos, cortamos a través del árbol en la parte superior, donde hay 10 líneas verticales. En el dendrograma de la dataset  Toy, que se muestran en la Figura \ref{Dendog}, se puede ver por la longitud de las ramas que dos o tres grupos pueden capturar los datos apropiadamente. Para los datos de caras, no parece haber un punto de corte muy natural.   Hay algunas ramas que representan grupos más distintos, pero no parece haber un número particular de grupos que den un buen ajuste. Esto no es sorprendente, dados los resultados de DBSCAN, que intentó agrupar todos los puntos en un sólo grupo (casi todos juntos). \\
+
+
+
+Visualicemos los 10 clusters, como lo hicimos anteriormente para k-means (Figura \ref{3-46}). Note que no hay noción de centro de clúster en la técnica de clúster Agglomerative (aunque podríamos calcular la media), y simplemente mostramos el primer par de puntos en cada clúster. Mostramos el número de puntos en cada clúster a la izquierda de la primera imagen:
+
+\begin{lstlisting}  
+
+In[85]: n_clusters = 10
+        for cluster in range(n_clusters):
+            mask = labels_agg == cluster
+            fig, axes = plt.subplots(1, 10, 
+                                     subplot_kw={'xticks': (), 'yticks': ()},
+                                     figsize=(15, 8))
+            axes[0].set_ylabel(np.sum(mask))
+                 for image, label, asdf, ax in zip(X_people[mask],
+                                                   y_people[mask],
+                                                   labels_agg[mask], axes):
+               ax.imshow(image.reshape(image_shape), vmin=0, vmax=1)
+               ax.set_title(people.target_names[label].split()[-1],
+                            fontdict={'fontsize': 9})
+
+
+\end{lstlisting} 
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=16.4cm, height=13cm, angle=-90]{../Imagen_Machine/3-46}
+	\caption{Imágenes aleatorias de los clústeres generados por el código en In[82], cada fila correspode a un clúster; el número a la izquierda indica el número de imágenes en cada clúster}
+	\label{3-46}
+\end{figure}
+
+
+Mientras que algunos de los clústers parecen tener un tema semántico, muchos de ellos son demasiado grandes para ser realmente homogéneneos. Para obtener clústeres más homogéneneos, podemos correr el algoritmo de nuevo, esta vez con 40 clústeres, y seleccionar algunos de los clústeres que son particularmente interesantes (Figura \ref{Grupo}):
+
+
+\begin{lstlisting}  % [frame=single]	
+
+In[86]: # extract clusters with ward agglomerative clustering
+        agglomerative = AgglomerativeClustering(n_clusters=40)
+        labels_agg = agglomerative.fit_predict(X_pca)
+        print("cluster sizes agglomerative: {}".format(
+               np.bincount(labels_agg)))
+   
+        n_clusters = 40       # hand-picked "interesting" clusters
+        for cluster in [10, 13, 19, 22, 36]: 
+            mask = labels_agg == cluster
+            fig, axes = plt.subplots(1, 15, 
+                                     subplot_kw={'xticks': (), 'yticks': ()},
+                                     figsize=(15, 8))                                
+           cluster_size = np.sum(mask)
+           axes[0].set_ylabel("#{}: {}".format(cluster, cluster_size))
+           for image, label, asdf, ax in zip(X_people[mask], y_people[mask],
+                                             labels_agg[mask], axes):
+               ax.imshow(image.reshape(image_shape), vmin=0, vmax=1)
+               ax.set_title(people.target_names[label].split()[-1],
+                            fontdict={'fontsize': 9})
+           for i in range(cluster_size, 15):
+               axes[i].set_visible(False)
+
+Out[86]:
+
+    cluster sizes agglomerative:
+    [ 58 80 79 40 222 50 55 78 172 28 26 34 14 11 60 66 152 27
+      47 31 54 5 8 56 3 5 8 18 22 82 37 89 28 24 41 40
+      21 10 113 69]
+
+
+\end{lstlisting} 
+
+
+
+
+\begin{figure}[!h!tbp]
+	\begin{subfigure}[b]{\textwidth}
+		\includegraphics[scale=0.57]{../Imagen_Machine/G1}
+		%	\caption{ }
+		%	\label{  }
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{\textwidth}
+		\includegraphics[scale=0.57]{../Imagen_Machine/G2}
+		%	\caption{Segunda imagen.}
+		%	\label{fig:f2}
+	\end{subfigure}
+	\caption{Imágenes de clústeres seleccionados encontrados por el clúster agglomerative al establecer el número de clústeres igual a 40. El texto a la izquierda muestra el índice del clúster y el número total de puntos en el clúster}
+	\label{Grupo}
+\end{figure}
+
+
+\noindent Aquí, el clúster  parece haber seleccionado    "{ }piel oscura y sonriente"{},  "{ }camisa con cuello"{}, "mujer sonriendo"{}, "Hussein"{} y "frente alta.{}"{ }    También podríamos encontrar estos clústers altamente similares usando el dendrograma, si hiciéramos un análisis más detallado.
+
+
+\newpage
+
+\subsection{Resumen de los métodos de agrupación}
+
+En esta sección se ha analizado y mostrado que  aplicar y evaluar los clústers es un procedimiento altamente cualitativo, y a menudo más útil en la fase exploratoria del análisis de datos. 
+
+Analizamos tres algoritmos de agrupamiento: k-means, DBSCAN, y Agglomerative; los tres tienen una manera de controlar la densidad de la agrupación (número de elementos o densidad por grupo).  k-means y Agglomerative le permiten especificar el número de clústeres deseados, mientras que DBSCAN le permite definir la proximidad utilizando el parámetro {\ttfamily eps}, que influye indirectamente en el tamaño del clúster. Los tres métodos se pueden utilizar en  datas grandes  de la vida real, además son fácilmente comprensibles, y premite clúste en muchos grupos.\\
+
+Cada uno de los algoritmos tiene  diferentes fortalezas.   k-means permite una cacterización de los clústeres usando las medias del clúster. También se puede ver como un método de descomposición, donde cada punto de datos está representado por su centro de clúster.  DBSCAN permite la detección de "{}puntos  ruido"{}  que no están asignados a ningún clúster, y puede ayudar a determinar automáticamente el número de clústeres. A diferencia de los otros dos métodos, DBSCAN permite formas declúster complejos, como vimos en el ejemplo de {\ttfamily two\_moons};  algunas veces produce grupos de tamaño muy diferente, que puede ser una fuerza o una debilidad. El clúster  Agglomerative  puede proporcionar toda una jerarquía de posibles particiones de los datos, que pueden ser fácilmente inspeccionados a través de dendrograma.
+
+
+
+
+
+\section{Resumen y Perspectivas}
+
+ Este capítulo introdujo una serie de algoritmos de aprendizaje  no supervisado que se pueden aplicar en el análisis de datos exploratorios y el preprocesamiento. Tener la representación correcta de los datos es a menudo crucial para que el aprendizaje supervisado o no supervisado tenga éxito, y los métodos de preprocesamiento y descomposición juegan un papel importante en la preparación de datos.
+
+
+
+La descomposición, el aprendizaje múltiple y los clusters son herramientas esenciales para mejorar la comprensión de los datos, y  pueden ser las únicas formas de dar sentido a sus datos en
+ ausencia de información  supervisada. 
+ 
+ 
+
+
+
+
+\noindent Incluso en un entorno supervisado, las herramientas  exploratoratorias son de gran importancia  para una mejor comprensión de las propiedades de los datos. 
+ Con frecuencia es difícil  cuantificar  la utilidad de un algoritmo no supervisado, aunque esto no debe  disuadirlo de usarlos para recopilar información de sus datos.
+
+Con estos métodos debajo de su cinturón, ahora está equipado con todos los algoritmos esenciales   del aprendizaje automático que los profesionales  usan hoy en  día.\\
+
+ 
+
+
+Le recomendamos que pruebe los métodos de agrupación y descomposición tanto en la data   bidimensional  Toy,  como en dataset del mundo real incluidos en scikit-learn, como la data de dígitos, iris y   cáncer.\\
+
+
+				
+				
+
+\newpage
+
+\vspace{-2cm}	
+\hspace{-1cm}
+{\fcolorbox{red}{white}{ 		
+		\begin{minipage}[16cm]{13.5cm}    %   centrado, largo y ancho                {14cm} 
+			\vspace{0.4cm}	
+			
+			
+			{\footnotesize{	
+					
+					\begin{center}
+						{\bf{Resumen de la interfaz del estimador} }
+					\end{center}	
+					
+					
+					
+					Un repaso brevemente sobre la API que presentamos en los capítulos \ref{Cap2}   y  \ref{Cap3}.
+					Todos los algoritmos en {\ttfamily scikit-learn}, ya sea preprocesamiento, algoritmos de aprendizaje supervisado o  no supervisado, son implementados como clases. En {\ttfamily scikit-learn}  estas clases son llamadas estimadores. Para aplicar un algoritmo, primero tienes que instanciar un objeto de la clase en particular:\\
+					
+					
+					%\begin{lstlisting}  % [frame=single]	
+					
+					In[87]:	{\scriptsize{\color{blue}
+							from { \color{cyan}  sklearn.linear\_model} import {\color{cyan}   LinearRegression }
+							
+					\hspace{1.1cm}logreg = LogisticRegression()   } }  \\            
+					
+					
+					
+					% \end{lstlisting}
+					
+					
+					La clase  estimador contiene el algoritmo y también almacena el modelo aprendido
+					de la data usando el algoritmo. \\
+					
+					
+					Se debe configurar cualquier parámetro del modelo  objeto a construir.
+					Estos parámetros incluyen regularización, control de complejidad, número de clusters para
+					encontrar, etc.  Todos los estimadores tienen un método de ajuste, que se utiliza para
+					construir el modelo.  El método {\ttfamily fit} siempre requiere como primer argumento la data X, representados como una matriz {\ttfamily NumPy} o una matriz  sparse  de {\ttfamily SciPy}, donde cada fila representa un único punto de la data. Los datos X  siempre se supone que es una matriz {\ttfamily NumPy} o una matriz sparse  {\ttfamily SciPy} que contiene entradas continuas (floating-point).  Los algoritmos supervisados  también requieren un argumento $y$, que es una matriz {\ttfamily NumPy} unidimensional que contiene valores objetivos para regresión o clasificación (es decir, las etiquetas o respuestas de salida conocidas).\\
+					
+					
+					
+					Hay dos maneras principales de aplicar un modelo aprendido en   {\ttfamily scikit-learn}. Para crear una predicción  en forma de una nueva salida como $y$, se utiliza el método de  {\ttfamily predict}. Para crear una nueva representación de los datos de entrada X, se utiliza el método {\ttfamily transform}. La Tabla \ref{Tabla1} presenta un resumen de la implementación de los métodos {\ttfamily predict}  y  {\ttfamily transform}.\\
+					
+					
+					
+					
+					
+					%\begin{table}[htbp]
+					%	\caption{Resumen de la API {\ttfamily scikit-learn}}
+					
+					Tabla \ref{Tabla1}.  Resumen de la API {\ttfamily scikit-learn}
+					
+					\begin{tabular}{l l }
+						%\caption{Resumen de la API {\ttfamily scikit-learn}}
+						\multicolumn{2}{|>{\columncolor{vino}}c|}{\color{white}\bf estimator.fit(x\_train, [y\_train])}\\
+						\multicolumn{2}{|>{\columncolor{vino}}c|}{\color{white}\bf estimator.predict(X\_text) \hspace{0.15cm}  estimator.transform(X\_test)}\\
+						\hline
+						Classification &\hspace{3cm} Preprocessing\\	
+						Regression     &\hspace{3cm} Dimensionality reduction\\
+						Clustering     &\hspace{3cm} Feature extraction\\
+						&\hspace{3cm} Feature selection \\
+						\arrayrulecolor{vino}\hline
+					\end{tabular}\label{Tabla1} \\
+					%\end{table}
+					\vspace{0.2cm}
+					
+					Además, todos los modelos supervisados tienen un método  que permite una evaluación del modelo, es   {\ttfamily score(X\_test, y\_test)}. En  la Tabla \ref{Tabla1},{ } {\ttfamily  X\_train,   y\_train }   se refieren a los datos y etiquetas para entrenar, mientras que  {\ttfamily X\_test,   y\_test}  se refieren a los datos y etiquetas para  prueba (si es aplicable).\\
+					
+					
+					
+					% {\scriptsize{\color{blue} 
+					%		from { \color{cyan}  sklearn.linear\_model} import {\color{cyan}   
+					%		LinearRegression }           		logreg = LogisticRegression()   } }  \\ 
+					
+					
+			} }
+			
+\end{minipage}  }}
+
+
+											
