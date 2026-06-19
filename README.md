@@ -1,3 +1,8 @@
+
+Escrito en Latex.
+
+El proyecto está escrito en LaTeX (Overleaf, PDF académico)
+
 Proyecto académico con fines educativos. Por ahora ...
 Proyecto en Proceso.   ......
 
